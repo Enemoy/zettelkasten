@@ -8,3 +8,4 @@ testfile
 bib_sources.db
 content_files/
 citation_files/
+test_dataset.py
