@@ -12,10 +12,6 @@ description_string="This module will compile all bibliography-files from one fol
 file_help_text="The file you want to compile to. Type \"standard\" to use or standard bib-file."
 input_help_text="The input folder containing the bibliography-files."
 
-STANDARD_BIB_FILE = cfg.bib_file
-STANDARD_INPUT_FOLDER = cfg.bib_folder
-
-
 def create_main_bib(INPUT_FOLDER):
     #creates and returns a list of all entries in the bibfiles in the INPUT_FOLDER
     FILE_LIST = []
@@ -31,8 +27,8 @@ def create_main_bib(INPUT_FOLDER):
                         temp_string = line
                     elif line.startswith("}"):
                         temp_string += line
+                        #check for dublicate
                         if temp_string not in ENTRY_LIST:
-                            #check for dublicate
                             ENTRY_LIST.append(temp_string)
                     else:
                         temp_string += line
@@ -48,30 +44,41 @@ def create_file_list(INPUT_FOLDER):
 
     return RETURN_LIST
 
-#Main
-if __name__ == "__main__":
-
+def main():
     parser = argparse.ArgumentParser(description=description_string, usage=usage_string, add_help=True)
     parser.add_argument("-o", "--output", type=str, help=file_help_text)
     parser.add_argument("-i", "--input", type=str, help=input_help_text)
     args = parser.parse_args()
 
-    if args.output != "standard":
-        ARG_BIB_FILE = args.output
-    else:
-        ARG_BIB_FILE = STANDARD_BIB_FILE
-
-
     if args.input:
         ARG_INPUT_FOLDER = args.input
     else:
-        ARG_INPUT_FOLDER = STANDARD_INPUT_FOLDER
+        ARG_INPUT_FOLDER = cfg.Str_path_bibfolder
+
+    if ARG_INPUT_FOLDER.startswith("~"):
+        ARG_INPUT_FOLDER = cfg.HOME + ARG_INPUT_FOLDER[1:]
+
+    if args.output == "standard":
+        ARG_BIB_FILE = cfg.bibfile_complete
+    elif args.output == "terminal" or args.output == None:
+        ARG_BIB_FILE = "terminal"
+    else:
+        ARG_BIB_FILE = args.output
+
+    if ARG_BIB_FILE.startswith("~"):
+        ARG_BIB_FILE = cfg.HOME + ARG_BIB_FILE[1:]
+
 
     OUTPUT_LIST = create_main_bib(ARG_INPUT_FOLDER)
 
-    if ARG_BIB_FILE:
+    if ARG_BIB_FILE != "terminal":
         with open(ARG_BIB_FILE, 'w') as f:
             f.writelines(OUTPUT_LIST)
     else:
         for e in OUTPUT_LIST:
             print(e)
+
+#Main
+if __name__ == "__main__":
+    main()
+

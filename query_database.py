@@ -16,7 +16,7 @@ Str_manual_flag_column = "Which column to query."
 Str_manual_flag_string = "Search term you want to query."
 Str_manual_flag_inklusive = "Search inklusivly."
 
-if cfg.Str_path_bibfolder.startswith("~"):
+if cfg.database_file.startswith("~"):
     DB_PATH = cfg.HOME + cfg.database_file [1:]
 else:
     DB_PATH  = cfg.database_file

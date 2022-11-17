@@ -10,8 +10,8 @@ import os
 # Path to the database-file
 database_file = "~/.bin/zettelkasten/bib_sources.db"
 
-# The path to your main Bibliography, where all entries are stored.
-bib_file = "/home/simon/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/bib_complete.bib"
+# The path to your main Bibliography, where all entries are stored. (If you want to cite from all you exisiting entires.
+bibfile_complete = "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/bib_complete.bib"
 
 # Path where all of your .bib files are stored (default variable, can be specified in a lot of cases)
 Str_path_bibfolder =  "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/Bibs/"
