@@ -16,7 +16,11 @@ Str_manual_flag_column = "Which column to query."
 Str_manual_flag_string = "Search term you want to query."
 Str_manual_flag_inklusive = "Search inklusivly."
 
-DB_PATH = cfg.HOME + cfg.database_file[1:]
+if cfg.Str_path_bibfolder.startswith("~"):
+    DB_PATH = cfg.HOME + cfg.database_file [1:]
+else:
+    DB_PATH  = cfg.database_file
+
 
 def query_database(COLUMN, SEARCH_TERM, OUTPUT, TABLE):
     # Queries the database with the arguments given and returns a list of strings.
@@ -25,7 +29,10 @@ def query_database(COLUMN, SEARCH_TERM, OUTPUT, TABLE):
 
     c = conn.cursor()
 
-    EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " LIKE '%" + SEARCH_TERM + "%';"
+    if COLUMN == "id":
+        EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " = " + SEARCH_TERM + ";"
+    else:
+        EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " LIKE '%" + SEARCH_TERM + "%';"
 
     try:
         for row in c.execute(EXECUTE_COMMAND):
@@ -97,8 +104,15 @@ def main():
     if args.table:
         TABLE = args.table
     else:
-        print("No table given!")
-        quit()
+        TABLE = cfg.database_bib_sources_tablename
+
+    if TABLE == 1:
+        TABLE = cfg.database_bib_sources_tablename
+    elif TABLE == 2:
+        TABLE == cfg.database_bib_datapoints_tablename
+    elif TABLE == 3:
+        TABLE == cfg.database_bib_citations_tablename
+
 
     if not args.column or not args.string:
         print("You have put search term into the machine!")
@@ -112,9 +126,6 @@ def main():
 
     for e in output_list:
         print(e)
-
-
-    quit()
 
 
 if __name__ == "__main__":

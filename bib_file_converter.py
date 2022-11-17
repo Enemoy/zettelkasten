@@ -233,15 +233,15 @@ def main():
     parser.add_argument("-f", "--file", action="append", help=Str_flag_file)
     args = parser.parse_args()
 
-    if cfg.Str_path_bibfolder.startswith("~"):
+    if cfg.database_file.startswith("~"):
         Str_path_database_local = cfg.HOME + cfg.database_file [1:]
     else:
         Str_path_database_local  = cfg.database_file
 
-    # if cfg.Str_path_bibfolder.startswith("~"):
-    #     Str_path_bibfolder_local = cfg.HOME + cfg.Str_path_bibfolder[1:]
-    # else:
-    #     Str_path_bibfolder_local = cfg.Str_path_bibfolder
+    if cfg.Str_path_bibfolder.startswith("~"):
+        Str_path_bibfolder_local = cfg.HOME + cfg.Str_path_bibfolder[1:]
+    else:
+        Str_path_bibfolder_local  = cfg.Str_path_bibfolder
 
     if args.refresh:
         print("Repopulating...")
@@ -249,6 +249,10 @@ def main():
     else:
         print("Not repopulating...")
 
+    # If no input files are given, the default folder of bib-files is chosen.
+    if args.directory == None and args.file == None:
+        print("Defaulting! Using all .bib-files in the default folder of the config file.")
+        convert_bibfile_folder(Str_path_bibfolder_local, Str_path_database_local)
 
     # Convert every file in the directories given as arguments.
     if args.directory:
