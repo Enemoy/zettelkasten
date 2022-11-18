@@ -8,7 +8,7 @@
 	- Argument 2: Terminal oder Popup?
 	- Argument 3: Spalte, die geändert werden soll
 - Überprüfung ob citekey schon vorhanden ist
-- Überprüfung ob citekeys in datapoints und citations noch existieren
+- Überprüfung ob citekeys in datapoints und citations noch in sources existieren
 - Funktion, die massenhaft Citekeys in datapoints oder citations ändern kann (falls sich ein citekey in den .bib-files geändert wird)
 - Funktion, die ein Backup der Datenbank macht macht:
 	- Standardpfad im Config File

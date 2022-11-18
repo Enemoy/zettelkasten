@@ -55,7 +55,7 @@ open_terminal(){
 	then
 		# Adding the citation from the system clipboard
 		#$POPUP_TERMINAL  -e $EDITOR $TMP_FILEPATH_1
-		python ~/.bin/zettelkasten/add_new_datapoint.py -d -c -p $TMP_FILEPATH_1
+		python ~/.bin/zettelkasten/add_new_datapoint.py -c -p $TMP_FILEPATH_1
 	elif [[ $1 == "manual" ]];
 	then
 		# Adding the citation through vim
@@ -64,13 +64,13 @@ open_terminal(){
 		sed -i "s|QUOTE=|QUOTE=$TMP_FILEPATH_2|g" $TMP_FILEPATH_1
 		$POPUP_TERMINAL -e $EDITOR $TMP_FILEPATH_2
 		#$POPUP_TERMINAL -e $EDITOR $TMP_FILEPATH_1
-		python ~/.bin/zettelkasten/add_new_datapoint.py -d -p $TMP_FILEPATH_1
+		python ~/.bin/zettelkasten/add_new_datapoint.py -p $TMP_FILEPATH_1
 		rm $TMP_FILEPATH_2
 	else
 		# Adding the citation from a textfile
 		sed -i "s|QUOTE=|QUOTE=$1|g" $TMP_FILEPATH_1
 		#$POPUP_TERMINAL -e $EDITOR $TMP_FILEPATH_1
-		python ~/.bin/zettelkasten/add_new_datapoint.py -d -p $TMP_FILEPATH_1
+		python ~/.bin/zettelkasten/add_new_datapoint.py -p $TMP_FILEPATH_1
 	fi
 }
 
@@ -80,7 +80,7 @@ open_local(){
 	then
 		# Adding the citation from the system clipboard
 		$EDITOR $TMP_FILEPATH_1
-		python ~/.bin/zettelkasten/add_new_datapoint.py -d -c -p $TMP_FILEPATH_1
+		python ~/.bin/zettelkasten/add_new_datapoint.py -c -p $TMP_FILEPATH_1
 	elif [[ $1 == "manual" ]];
 	then
 		# Adding the content through vim
@@ -89,13 +89,13 @@ open_local(){
 		sed -i "s|QUOTE=|QUOTE=$TMP_FILEPATH_2|g" $TMP_FILEPATH_1
 		$EDITOR $TMP_FILEPATH_2
 		$EDITOR $TMP_FILEPATH_1
-		python ~/.bin/zettelkasten/add_new_datapoint.py -d -p $TMP_FILEPATH_1
+		python ~/.bin/zettelkasten/add_new_datapoint.py -p $TMP_FILEPATH_1
 		rm $TMP_FILEPATH_2
 	else
 		# Adding the content from a textfile
 		sed -i "s|QUOTE=|QUOTE=$1|g" $TMP_FILEPATH_1
 		$EDITOR $TMP_FILEPATH_1
-		python ~/.bin/zettelkasten/add_new_datapoint.py -d -p $TMP_FILEPATH_1
+		python ~/.bin/zettelkasten/add_new_datapoint.py -p $TMP_FILEPATH_1
 	fi
 }
 
