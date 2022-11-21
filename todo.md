@@ -1,15 +1,31 @@
 # Todo-Liste für den Zettelkasten
 
-- Funktion um neue Zitate hinzuzufügen:
-	- Erweiterung auf LaTeX-formatierte Zitate als Option
-- Integration in vim / latex - Umgebung
-- Ändern von Spalteninhalten einzelner Einträge durch Zenity oder mithilfe des Terminals (nur in citations oder datapoints):
+
+## neue Funktionen
+
+- Integration in Vim
+- Bash script, dass auf Suite zugreift:
+	- Argument 1: Auswahl des Sub-Programm
+	- Weitergabe alle anderen Argumente an Sub-Programm
+- Funktion um einzelne Inhalte zu ändern (Zentiy / Terminal):
 	- Argument 1: id (zur Bearbeitung)
 	- Argument 2: Terminal oder Popup?
 	- Argument 3: Spalte, die geändert werden soll
-- Überprüfung ob citekey schon vorhanden ist
-- Überprüfung ob citekeys in datapoints und citations noch in sources existieren
-- Funktion, die massenhaft Citekeys in datapoints oder citations ändern kann (falls sich ein citekey in den .bib-files geändert wird)
-- Funktion, die ein Backup der Datenbank macht macht:
+- Funktion für Backup:
 	- Standardpfad im Config File
 	- Ausführung vor bestimmten Funktionen, um Datenverlust zu vermeiden
+- Bash-Script um im Browser eine Website als Quelle hinzuzufügen:
+	- automatisches Auswählen des Links
+	- hinzufügen per Script
+	- Abfrage von Titel / Autor
+	- automatisches Hinzufügen von Datum als "zuletzt aufgerufen"
+	- Auswahl der Bibliografie, zu der Quelle hinzugefügt werden soll (Default: Online)
+- Funktion, um Zitate / datapoints + Daten (Autor, Jahr, Buch, etc) schön ins Terminal zu printen
+
+## Verbesserungen / Überarbeitungen
+
+- argparse verbessern:
+	- defaults
+	- Optionen zum Auswählen
+- add_citation verbessern:
+	- Option für Extraktion aus LaTeX - formatierten Zitaten

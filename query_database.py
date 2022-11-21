@@ -9,8 +9,8 @@ import argparse
 import main_config as cfg
 
 Str_manual_usage = "Usage"
-Str_manual_description = "This script can query the different tables in the database."
-Str_manual_flag_table = "Which table you want to chose."
+Str_manual_description = "This script can query the different tables in the database. You always have to pair one column (-c) with one string to search (-s)"
+Str_manual_flag_table = "Which table you want to chose. Default: " + cfg.database_bib_sources_tablename
 Str_manual_flag_output = "Which column to output."
 Str_manual_flag_column = "Which column to query."
 Str_manual_flag_string = "Search term you want to query."
@@ -25,18 +25,39 @@ else:
 def query_database(COLUMN, SEARCH_TERM, OUTPUT, TABLE):
     # Queries the database with the arguments given and returns a list of strings.
     return_list = []
+    OUTPUT_TAGS = False
     conn = sqlite3.connect(DB_PATH)
 
-    c = conn.cursor()
+    if OUTPUT == "tags":
+        OUTPUT_TAGS = True
+        OUTPUT = "tag_1,tag_2,tag_3,tag_4,tag_5"
+
+    if COLUMN == "tags":
+        COLUMN = "(tag_1 || tag_2 || tag_3 || tag_4 || tag_5)"
+
 
     if COLUMN == "id":
         EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " = " + SEARCH_TERM + ";"
     else:
         EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " LIKE '%" + SEARCH_TERM + "%';"
 
+    c = conn.cursor()
+
     try:
         for row in c.execute(EXECUTE_COMMAND):
-            return_list.append(row[0])
+            if OUTPUT == "path_to_bibfile":
+                for e in row[0].split(";"):
+                    return_list.append(e)
+            elif OUTPUT_TAGS == True:
+                s = ""
+                for e in row:
+                    s += e + " / "
+
+                s = s.strip(" / ")
+                return_list.append(s)
+            else:
+                return_list.append(row[0])
+
     except sqlite3.OperationalError:
         print("SQL Error: The column or table you chose doesn't exist!")
         quit()
@@ -106,13 +127,12 @@ def main():
     else:
         TABLE = cfg.database_bib_sources_tablename
 
-    if TABLE == 1:
-        TABLE = cfg.database_bib_sources_tablename
-    elif TABLE == 2:
-        TABLE == cfg.database_bib_datapoints_tablename
-    elif TABLE == 3:
-        TABLE == cfg.database_bib_citations_tablename
-
+    if TABLE == "1":
+        TABLE = cfg.database_sources_tablename
+    elif TABLE == "2":
+        TABLE = cfg.database_datapoints_tablename
+    elif TABLE == "3":
+        TABLE = cfg.database_citations_tablename
 
     if not args.column or not args.string:
         print("You have put search term into the machine!")
