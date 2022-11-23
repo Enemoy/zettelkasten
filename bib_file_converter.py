@@ -124,7 +124,7 @@ def convert_to_sql_command(input_dic, database, tablename, column_names_mixed):
 
             INSERT_COMMAND += "'" + key_value + "', "
         else:
-            print("Key not in the list:", key, "in", input_dic["bibfile"])
+            print("Key not in the list:", key, "in", input_dic["path_to_bibfile"])
 
 
     INSERT_COMMAND = INSERT_COMMAND[:-2]
@@ -189,18 +189,22 @@ def create_entry_list(BIB_FILE):
         return_dic = {"entrytype": ENTRYTYPE, "citekey": CITEKEY, "path_to_bibfile": BIB_FILE}
 
         del rest[0]
-        del rest[-1]
+        # print(rest[-1])
+        rest[-1] = rest[-1].split("\n")[0]
+        #print(rest[-1])
+        #del rest[-1]
 
         # Strip elements of entry data
         for e in rest:
             attribute_type = e.split("=")[0]
-            attribute_type = attribute_type.strip()
-            attribute_value = e.split("=")[1]
-            attribute_value = attribute_value.strip()
-            attribute_value = attribute_value.strip("\"")
-            attribute_value = attribute_value.strip("{}")
+            if attribute_type != "}":
+                attribute_type = attribute_type.strip()
+                attribute_value = e.split("=")[1]
+                attribute_value = attribute_value.strip()
+                attribute_value = attribute_value.strip("\"")
+                attribute_value = attribute_value.strip("{}")
 
-            return_dic[attribute_type] = attribute_value
+                return_dic[attribute_type] = attribute_value
 
         return_list.append(return_dic)
 

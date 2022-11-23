@@ -25,8 +25,6 @@ else:
 def execute_sql_command(input_command, database = DB_PATH):
     # executes the sql-command onto the database
 
-    print(database)
-
     conn = sqlite3.connect(database)
     c = conn.cursor()
 

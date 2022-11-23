@@ -8,7 +8,7 @@
 import os
 
 # Path to the database-file
-database_file = "~/.bin/zettelkasten/bib_sources.db"
+database_file = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/bib_sources.db"
 
 # The path to your main Bibliography, where all entries are stored. (If you want to cite from all you exisiting entires.
 bibfile_complete = "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/bib_complete.bib"
@@ -17,10 +17,10 @@ bibfile_complete = "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/bib_complete.b
 Str_path_bibfolder =  "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/Bibs/"
 
 # Path to the directory where all the datapoint contents are stored
-Str_path_content_directory = "~/.bin/zettelkasten/content_files/"
+Str_path_content_directory = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/content_files/"
 
 # Path to the directory where all the citations are stored
-Str_path_citation_directory = "~/.bin/zettelkasten/citation_files/"
+Str_path_citation_directory = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/citation_files/"
 
 
 # Tablename for the collection of your sources.

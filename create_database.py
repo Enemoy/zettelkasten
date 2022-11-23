@@ -69,6 +69,7 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
                 eprint text,
                 crossref text,
                 series text,
+                addendum text,
                 organization text,
                 abstract text,
                 path_to_bibfile text,
