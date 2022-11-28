@@ -28,8 +28,12 @@ else:
 def execute_sql_command(input_command, database = DB_PATH):
     # executes the sql-command onto the database
 
-    conn = sqlite3.connect(database)
-    c = conn.cursor()
+    try:
+        conn = sqlite3.connect(database)
+        c = conn.cursor()
+
+    except sqlite3.OperationalError:
+        print("SQL OperationalError. You probably chose a wrong column!")
 
     c.execute(input_command)
 
@@ -43,13 +47,20 @@ def change_textfile_content(input_command, database=DB_PATH):
     conn = sqlite3.connect(database)
     c = conn.cursor()
 
-    for row in c.execute(input_command):
-        PATH = row[0]
+    PATH = ""
+    try:
+        for row in c.execute(input_command):
+            PATH = row[0]
+
+    except sqlite3.OperationalError:
+        print("SQL OperationalError. You probably chose a wrong column!")
+        quit()
 
     conn.commit()
 
-    EDITOR = os.environ.get('EDITOR', 'vim')
-    subprocess.call([EDITOR, PATH])
+    if PATH != "":
+        EDITOR = os.environ.get('EDITOR', 'vim')
+        subprocess.call([EDITOR, PATH])
 
     return
 
@@ -72,14 +83,22 @@ def main():
     parser.add_argument("-n", "--new_value", type=str, help=Str_flag_entry)
     args = parser.parse_args()
 
-    list_content_edit_options = ["content_path", "quote_path"]
+    list_content_edit_options = ["content_path", "quote_path", "path"]
 
     if args.column not in list_content_edit_options:
         if args.new_value == None:
             print("You have to input a -n argument if you choose this column.")
             quit()
 
-    change_entry(args.table, args.id, args.column, args.new_value)
+    if args.column == "path":
+        if args.table == cfg.database_datapoints_tablename:
+            COLUMN = "content_path"
+        if args.table == cfg.database_citations_tablename:
+            COLUMN = "quote_path"
+    else:
+        COLUMN = args.column
+
+    change_entry(args.table, args.id, COLUMN, args.new_value)
 
 
 if __name__ == "__main__":
