@@ -46,7 +46,7 @@ DROPDOWN_MENU = "rofi -theme ~/.config/rofi/theme_wide.rasi -dmenu"
 # Backups
 database_file_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/bib_sources.db"
 Str_path_content_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/content_files/"
-Str_path_citation_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/content_files/"
+Str_path_citation_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/datapoint_files/"
 
 
 #############################################################################################

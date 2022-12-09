@@ -203,14 +203,7 @@ def create_entry_list(BIB_FILE):
 
 def database_fillup(BIB_FILE, STR_FILENAME_DATABASE, BIB_TABLENAME):
     # Creating list with column names to exclude data that is not assignable to a column
-    conn = sqlite3.connect(STR_FILENAME_DATABASE)
-    c = conn.cursor()
-    Str_command_tmp_01 = "SELECT * FROM " + BIB_TABLENAME + ";"
-    cursor = c.execute(Str_command_tmp_01)
-
-    # Create column list
-    List_database_columnnames = list(map(lambda x: x[0], cursor.description))
-    c.close()
+    List_database_columnnames = zfn.get_column_names(BIB_TABLENAME)
 
     entry_list = create_entry_list(BIB_FILE)
 

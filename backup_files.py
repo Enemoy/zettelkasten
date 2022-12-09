@@ -22,12 +22,15 @@ CITATION_DIRECTORY_BACKUP = zfn.correct_home_path(cfg.Str_path_citation_director
 def backup_all():
 
     # backup database
+    os.remove(DATBASE_PATH_BACKUP)
     shutil.copy2(DATBASE_PATH, DATBASE_PATH_BACKUP)
     print("Database backed up!")
 
+    shutil.rmtree(CONTENT_DIRECTORY_BACKUP)
     shutil.copytree(CONTENT_DIRECTORY, CONTENT_DIRECTORY_BACKUP)
     print("Content directory backed up!")
 
+    shutil.rmtree(CITATION_DIRECTORY_BACKUP)
     shutil.copytree(CITATION_DIRECTORY, CITATION_DIRECTORY_BACKUP)
     print("Citation directory backed up!")
 

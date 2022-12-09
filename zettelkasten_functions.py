@@ -18,6 +18,18 @@ def correct_home_path(INPUT_PATH):
 
     return OUTPUT_PATH
 
+def get_column_names(TABLENAME, database = correct_home_path(cfg.database_file)):
+    # Creates a list of column names of a table
+    conn = sqlite3.connect(database)
+    c = conn.cursor()
+    sql_command = "SELECT * FROM " + TABLENAME + ";"
+    cursor = c.execute(sql_command)
+
+    # Create column list
+    COLUMN_LIST = list(map(lambda x: x[0], cursor.description))
+    c.close()
+
+    return COLUMN_LIST
 
 def execute_sql_command(input_command, database = correct_home_path(cfg.database_file)):
     # executes the sql-command onto the database

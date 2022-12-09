@@ -81,8 +81,24 @@ def multi_query(TABLE, LIST_COLUMN, LIST_SEARCHTERM, BOOL_INKLUSIVE=False, OUTPU
     # List of lists to compare if all results are in all lists
     compare_list = []
 
+    LIST_COLUMNS_CURRENT = zfn.get_column_names(TABLE)
+    LIST_COLUMNS_SOURCES = zfn.get_column_names(cfg.database_bib_sources_tablename)
+
+    tmp_list = []
     for column, search_string in zip(LIST_COLUMN, LIST_SEARCHTERM):
-        tmp_list = query_database(column, search_string, OUTPUT, TABLE)
+        if column in LIST_COLUMNS_CURRENT:
+            # look through columns in the table given by user
+            tmp_list = query_database(column, search_string, OUTPUT, TABLE)
+        else:
+            # expand the search to the sources table
+            if column in LIST_COLUMNS_SOURCES:
+                list_citekey_tmp = query_database(column, search_string, "citekey", cfg.database_bib_sources_tablename)
+                for k in list_citekey_tmp:
+                    for o in query_database("citekey", k, OUTPUT, TABLE):
+                        tmp_list.append(o)
+            else:
+                print("The citekey you were looking for does not exist in", TABLE, "or in", cfg.database_bib_sources_tablename)
+
         if not BOOL_INKLUSIVE:
             for e in tmp_list:
                 if e not in return_list:
@@ -90,6 +106,7 @@ def multi_query(TABLE, LIST_COLUMN, LIST_SEARCHTERM, BOOL_INKLUSIVE=False, OUTPU
         else:
             compare_list.append(tmp_list)
 
+    # inklusive does not work with query over sources. Fix this
 
     if BOOL_INKLUSIVE:
         compare_list_base = compare_list[0]
@@ -119,6 +136,9 @@ def main():
     parser.add_argument("-i", "--inklusive", action="store_true", help=Str_manual_flag_inklusive)
     args = parser.parse_args()
 
+
+    # print("inklusive does not work with query over sources. Fix this")
+
     BOOL_PRINT_PRETTY = False
     STR_OUTPUT_TYPE = args.output
 
@@ -138,22 +158,22 @@ def main():
     elif TABLE == "3":
         TABLE = cfg.database_citations_tablename
 
+    # Todo: if no args.string, print all entries
     if not args.column or not args.string:
         print("You have put search term into the machine!")
         quit()
 
-
-    if args.output == None:
-        output_list = multi_query(TABLE, args.column, args.string, args.inklusive)
-    else:
+    for c in args.column:
         output_list = multi_query(TABLE, args.column, args.string, args.inklusive, STR_OUTPUT_TYPE)
+
+    # 1. Make citekey list from matching sources entries
+    # 2. Make id list from previous list where citekeys match
 
     for e in output_list:
         if BOOL_PRINT_PRETTY == True:
             print(zfn.pretty_print(e, TABLE))
-            # Print seperator after entry if it's not the last entry
             if e != output_list[len(output_list)-1]:
-                print("----")
+                print("----\n")
         else:
             print(e)
 
