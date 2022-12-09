@@ -6,7 +6,7 @@ import os
 import argparse
 import subprocess
 import main_config as cfg
-
+import zettelkasten_functions as zfn
 
 # This function edits specific entries in datapoints or citations.
 # If the content will be edited, instead of editing the path, the system editor will be used.
@@ -20,26 +20,7 @@ Str_manual_usage="Usage"
 
 list_table_choices = [cfg.database_datapoints_tablename, cfg.database_citations_tablename]
 
-if cfg.database_file.startswith("~"):
-    DB_PATH = cfg.HOME + cfg.database_file [1:]
-else:
-    DB_PATH  = cfg.database_file
-
-def execute_sql_command(input_command, database = DB_PATH):
-    # executes the sql-command onto the database
-
-    try:
-        conn = sqlite3.connect(database)
-        c = conn.cursor()
-
-    except sqlite3.OperationalError:
-        print("SQL OperationalError. You probably chose a wrong column!")
-
-    c.execute(input_command)
-
-    conn.commit()
-
-    return
+DB_PATH = zfn.correct_home_path(cfg.database_file)
 
 def change_textfile_content(input_command, database=DB_PATH):
     # This function extracts the file path to edit and creates a bash command to make editing in the system editor possible.
@@ -71,7 +52,7 @@ def change_entry(TABLENAME, ID, COLUMN, NEW_VALUE):
         change_textfile_content(EXECUTE_COMMAND)
     else:
         EXECUTE_COMMAND = "UPDATE " + TABLENAME + " SET " + COLUMN + " = '" + NEW_VALUE + "' WHERE id = " + str(ID) + ";"
-        execute_sql_command(EXECUTE_COMMAND)
+        zfn.execute_sql_command(EXECUTE_COMMAND)
 
     return
 

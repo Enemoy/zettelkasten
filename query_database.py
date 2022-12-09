@@ -7,6 +7,7 @@ import pyperclip
 import os
 import argparse
 import main_config as cfg
+import zettelkasten_functions as zfn
 
 Str_manual_usage = "Usage"
 Str_manual_description = "This script can query the different tables in the database. You always have to pair one column (-c) with one string to search (-s)"
@@ -16,11 +17,7 @@ Str_manual_flag_column = "Which column to query."
 Str_manual_flag_string = "Search term you want to query."
 Str_manual_flag_inklusive = "Search inklusivly."
 
-if cfg.database_file.startswith("~"):
-    DB_PATH = cfg.HOME + cfg.database_file [1:]
-else:
-    DB_PATH  = cfg.database_file
-
+DB_PATH = zfn.correct_home_path(cfg.database_file)
 
 def query_database(COLUMN, SEARCH_TERM, OUTPUT, TABLE):
     # Queries the database with the arguments given and returns a list of strings.
@@ -116,11 +113,18 @@ def main():
     # Set up the argument input
     parser = argparse.ArgumentParser(description=Str_manual_description, usage=Str_manual_usage, add_help=True)
     parser.add_argument("-t", "--table", type=str, help=Str_manual_flag_table)
-    parser.add_argument("-o", "--output", type=str, help=Str_manual_flag_output)
+    parser.add_argument("-o", "--output", type=str, default="pretty", help=Str_manual_flag_output)
     parser.add_argument("-c", "--column", type=str, action="append", help=Str_manual_flag_column)
     parser.add_argument("-s", "--string", type=str, action="append", help=Str_manual_flag_string)
     parser.add_argument("-i", "--inklusive", action="store_true", help=Str_manual_flag_inklusive)
     args = parser.parse_args()
+
+    BOOL_PRINT_PRETTY = False
+    STR_OUTPUT_TYPE = args.output
+
+    if args.output == "pretty":
+        BOOL_PRINT_PRETTY = True
+        STR_OUTPUT_TYPE = "id"
 
     if args.table:
         TABLE = args.table
@@ -142,10 +146,16 @@ def main():
     if args.output == None:
         output_list = multi_query(TABLE, args.column, args.string, args.inklusive)
     else:
-        output_list = multi_query(TABLE, args.column, args.string, args.inklusive, args.output)
+        output_list = multi_query(TABLE, args.column, args.string, args.inklusive, STR_OUTPUT_TYPE)
 
     for e in output_list:
-        print(e)
+        if BOOL_PRINT_PRETTY == True:
+            print(zfn.pretty_print(e, TABLE))
+            # Print seperator after entry if it's not the last entry
+            if e != output_list[len(output_list)-1]:
+                print("----")
+        else:
+            print(e)
 
 
 if __name__ == "__main__":

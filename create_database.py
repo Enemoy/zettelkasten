@@ -4,6 +4,7 @@ import sqlite3
 import bib_file_converter
 import os
 import main_config as cfg
+import zettelkasten_functions as zfn
 
 # Creates the database and the three different tables in it.
 # If the table already exists, it won't be created.
@@ -11,8 +12,10 @@ import main_config as cfg
 def create_content_directory(PATH, NAME):
     # Create folder for datapoint_collection contents
     # Create path from config file
-    if PATH.startswith("~"):
-        PATH = cfg.HOME + PATH[1:]
+    # if PATH.startswith("~"):
+    #     PATH = cfg.HOME + PATH[1:]
+    PATH = zfn.correct_home_path(PATH)
+
 
     if not os.path.exists(PATH):
         os.makedirs(PATH)
@@ -144,10 +147,11 @@ def create_citations_table(PATH_TO_DATABASE, TABLENAME):
     return
 
 def main():
-    if cfg.Str_path_bibfolder.startswith("~"):
-        DB_PATH = cfg.HOME + cfg.database_file [1:]
-    else:
-        DB_PATH  = cfg.database_file
+    # if cfg.Str_path_bibfolder.startswith("~"):
+    #     DB_PATH = cfg.HOME + cfg.database_file [1:]
+    # else:
+    #     DB_PATH  = cfg.database_file
+    DB_PATH = zfn.correct_home_path(cfg.database_file)
 
     # All the stepts in the procedures of the database creation are in seperate functions so they can be called from other python scripts
 

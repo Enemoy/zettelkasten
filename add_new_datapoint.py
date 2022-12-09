@@ -7,6 +7,7 @@ import pyperclip
 import os
 import argparse
 import main_config as cfg
+import zettelkasten_functions as zfn
 
 
 # This python script will add a new information entry from a preformatted file with information.
@@ -19,18 +20,6 @@ Str_manual_flag_preexisting="This option is used when the whole information set 
 Str_manual_flag_dryrun="Will only print the SQL-command that will be constructed, without running it on the database."
 Str_path_databasefile=cfg.database_file
 
-
-def execute_sql_command(STR_COMMAND_SQL_ADDCONTENT, DATABASE):
-    #This function executes the SQL command on the databse
-    conn = sqlite3.connect(DATABASE)
-
-    c = conn.cursor()
-
-    c.execute(STR_COMMAND_SQL_ADDCONTENT)
-
-    conn.commit()
-
-    c.close()
 
 def create_new_contentfile(FILE_PATH, STORAGE_DIRECTORY, CONTENT_PREX, BOOL_DRYRUN):
     # Creates a new content-file in the corresponding folder an returns the path to the file as a string.
@@ -221,7 +210,7 @@ def main():
     if args.dryrun:
         print(Str_command_sql_addcontent)
     else:
-        execute_sql_command(Str_command_sql_addcontent, Str_path_database)
+        zfn.execute_sql_command(Str_command_sql_addcontent, Str_path_database)
 
 
 if __name__ == "__main__":

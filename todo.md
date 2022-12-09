@@ -10,7 +10,11 @@
 - Funktion für Backup:
 	- Standardpfad im Config File
 	- Ausführung vor bestimmten Funktionen, um Datenverlust zu vermeiden
-- Integration in Vim
+- Integration in Vim:
+	- hinzufügen der aktuellen markdown-Datei zu datapoints
+	- hinzufügen eines markierten Textabschnittes zu Datei für datapoints
+	- hinzufügen eines markierten Textes als Zitat
+	- aufrufen von dmenu für Citekeys basierend auf aktueller .bib-Datei im .tex-Dokument
 - Bash script, dass auf Suite zugreift:
 	- Argument 1: Auswahl des Sub-Programm
 	- Weitergabe alle anderen Argumente an Sub-Programm
@@ -44,6 +48,3 @@
 	- leichtere Organisation
 	- leichterer Umgang mit Flags (?!)
 
----
-
-# Sitzung

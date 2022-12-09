@@ -5,6 +5,7 @@ import bib_file_converter
 import os
 import argparse
 import main_config as cfg
+import zettelkasten_functions as zfn
 
 # Todo
 # - Improve special character replacement
@@ -151,18 +152,6 @@ def convert_to_sql_command(input_dic, database, tablename, column_names_mixed):
     return None
 
 
-def execute_sql_command(input_command, database):
-    # executes the sql-command onto the database
-
-    conn = sqlite3.connect(database)
-    c = conn.cursor()
-
-    c.execute(input_command)
-
-    conn.commit()
-
-    return
-
 def create_entry_list(BIB_FILE):
     # returns a list with dictonaries.
     # The dictonaries contain the information about the database entry.
@@ -226,7 +215,7 @@ def database_fillup(BIB_FILE, STR_FILENAME_DATABASE, BIB_TABLENAME):
     for e in entry_list:
         Str_command_sqlexecute_final = convert_to_sql_command(e, STR_FILENAME_DATABASE, BIB_TABLENAME, List_database_columnnames)
         if Str_command_sqlexecute_final != None:
-            execute_sql_command(Str_command_sqlexecute_final, STR_FILENAME_DATABASE)
+            zfn.execute_sql_command(Str_command_sqlexecute_final, STR_FILENAME_DATABASE)
 
     return
 
