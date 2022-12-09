@@ -28,8 +28,11 @@ def execute_sql_command(input_command, database = correct_home_path(cfg.database
         c.execute(input_command)
         conn.commit()
 
-    except sqlite3.OperationalError:
+    except sqlite3.OperationalError as e:
         print("SQL OperationalError. You probably chose a wrong column!")
+        print(e)
+        # print("Input command: ")
+        # print(input_command)
 
     return
 

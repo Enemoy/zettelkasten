@@ -98,9 +98,11 @@ def convert_to_sql_command(input_dic, database, tablename, column_names_mixed):
 
     for key in keylist:
         #Check for double based on citekey
+        # if key == "ISSN":
+        #     print(input_dic)
         if key == "citekey":
             CITEKEY_DOUBLE_BOOL = check_citekey_double(database, tablename, input_dic)
-        if key in column_names:
+        if key.lower() in column_names:
             INSERT_COMMAND += key + ", "
 
     try:
@@ -117,7 +119,7 @@ def convert_to_sql_command(input_dic, database, tablename, column_names_mixed):
     INSERT_COMMAND += ") VALUES("
 
     for key in keylist:
-        if key in column_names:
+        if key.lower() in column_names:
             # Replacing certain characters to not producte sql syntax errors
             # This should be fixed later because it's lazy programming
             key_value = input_dic[key]
