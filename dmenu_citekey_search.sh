@@ -3,12 +3,6 @@
 # This script will let the user choose a citekey depending on the column name given in $1 and the search string given in $2
 # EXAMPLE: dmenu_citekey_search.py author "Jacques Derrida" (looks for all entries of sources containing "Jacques Derrida" in the author column.
 
-# BIBFILE=$(grep \addbibresource $1)
-
-
-# BIBFILE=${BIBFILE#*\{}
-# BIBFILE=${BIBFILE::-1}
-
 
 eval `/home/simon/.bin/zettelkasten/main_config.py`
 

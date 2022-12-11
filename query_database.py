@@ -156,8 +156,10 @@ def main():
         TABLE = cfg.database_bib_sources_tablename
     elif TABLE == "2":
         TABLE = cfg.database_datapoints_tablename
+        STR_PATH_CONTENT_BASE = cfg.Str_path_datapoint_directory
     elif TABLE == "3":
         TABLE = cfg.database_citations_tablename
+        STR_PATH_CONTENT_BASE = cfg.Str_path_citation_directory
 
     # Todo: if no args.string, print all entries
     if not args.column or not args.string:
@@ -176,7 +178,11 @@ def main():
             if e != output_list[len(output_list)-1]:
                 print("----\n")
         else:
-            print(e)
+            if args.output == "content_path" or args.output == "quote_path":
+                print_output = STR_PATH_CONTENT_BASE + e
+                print(print_output)
+            else:
+                print(e)
 
 
 if __name__ == "__main__":

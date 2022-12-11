@@ -12,8 +12,8 @@ import zettelkasten_functions as zfn
 # Use this regularly.
 DATBASE_PATH = zfn.correct_home_path(cfg.database_file)
 DATBASE_PATH_BACKUP = zfn.correct_home_path(cfg.database_file_backup)
-CONTENT_DIRECTORY = zfn.correct_home_path(cfg.Str_path_content_directory)
-CONTENT_DIRECTORY_BACKUP= zfn.correct_home_path(cfg.Str_path_content_directory_backup)
+DATAPOINT_DIRECTORY = zfn.correct_home_path(cfg.Str_path_datapoint_directory)
+DATAPOINT_DIRECTORY_BACKUP= zfn.correct_home_path(cfg.Str_path_datapoint_directory_backup)
 CITATION_DIRECTORY = zfn.correct_home_path(cfg.Str_path_citation_directory)
 CITATION_DIRECTORY_BACKUP = zfn.correct_home_path(cfg.Str_path_citation_directory_backup)
 
@@ -26,11 +26,13 @@ def backup_all():
     shutil.copy2(DATBASE_PATH, DATBASE_PATH_BACKUP)
     print("Database backed up!")
 
-    shutil.rmtree(CONTENT_DIRECTORY_BACKUP)
-    shutil.copytree(CONTENT_DIRECTORY, CONTENT_DIRECTORY_BACKUP)
-    print("Content directory backed up!")
+    if os.path.exists(DATAPOINT_DIRECTORY_BACKUP):
+        shutil.rmtree(DATAPOINT_DIRECTORY_BACKUP)
+    shutil.copytree(DATAPOINT_DIRECTORY, DATAPOINT_DIRECTORY_BACKUP)
+    print("Datapoint directory backed up!")
 
-    shutil.rmtree(CITATION_DIRECTORY_BACKUP)
+    if os.path.exists(CITATION_DIRECTORY_BACKUP):
+        shutil.rmtree(CITATION_DIRECTORY_BACKUP)
     shutil.copytree(CITATION_DIRECTORY, CITATION_DIRECTORY_BACKUP)
     print("Citation directory backed up!")
 

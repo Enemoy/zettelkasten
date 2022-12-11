@@ -9,7 +9,7 @@ import zettelkasten_functions as zfn
 # Creates the database and the three different tables in it.
 # If the table already exists, it won't be created.
 
-def create_content_directory(PATH, NAME):
+def create_datapoint_directory(PATH, NAME):
     # Create folder for datapoint_collection contents
     # Create path from config file
     # if PATH.startswith("~"):
@@ -161,8 +161,8 @@ def main():
     create_datapoints_table(DB_PATH, cfg.database_datapoints_tablename)
     create_citations_table(DB_PATH, cfg.database_citations_tablename)
 
-    create_content_directory(cfg.Str_path_content_directory, "content")
-    create_content_directory(cfg.Str_path_citation_directory, "citation")
+    create_datapoint_directory(cfg.Str_path_datapoint_directory, "content")
+    create_datapoint_directory(cfg.Str_path_citation_directory, "citation")
 
 
 if __name__ == "__main__":

@@ -59,11 +59,11 @@ def pretty_format_datapoint(INPUT_ROW):
     OUTPUT_STRING = "ID: " + str(INPUT_ROW[0]) + ": " + INPUT_ROW[1]    # Add id and citekey
     OUTPUT_STRING += " | Seiten / Stelle: " + INPUT_ROW[2]              # Add page / location
     OUTPUT_STRING += "\n" + INPUT_ROW[3]                                # Add Summary
-    OUTPUT_STRING += "\n" + "Pfad: " + INPUT_ROW[4]                     # Add Path
+    OUTPUT_STRING += "\n" + "Pfad: " + cfg.Str_path_datapoint_directory + INPUT_ROW[4]                     # Add Path
 
     # Add tags
     OUTPUT_STRING += "\nTags: "
-    for i in range(5, 9):
+    for i in range(5, 10):
         if INPUT_ROW[i] != "":
             OUTPUT_STRING += INPUT_ROW[i] + ", "
 
@@ -74,7 +74,8 @@ def pretty_format_datapoint(INPUT_ROW):
 def pretty_format_citation(INPUT_ROW):
     # Formats the output as a pretty citation with infos from sources
     #Get quote from file
-    f = open(INPUT_ROW[3], "r")
+    tmp_path = correct_home_path(cfg.Str_path_citation_directory) + INPUT_ROW[3]
+    f = open(tmp_path, "r")
     CITATION = f.read()
     f.close()
 
@@ -106,7 +107,7 @@ def pretty_format_citation(INPUT_ROW):
 
     # Add tags
     OUTPUT_STRING += "\nTags: "
-    for i in range(5, 9):
+    for i in range(4, 9):
         if INPUT_ROW[i] != "":
             OUTPUT_STRING += INPUT_ROW[i] + ", "
 

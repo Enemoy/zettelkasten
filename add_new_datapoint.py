@@ -50,7 +50,12 @@ def create_new_contentfile(FILE_PATH, STORAGE_DIRECTORY, CONTENT_PREX, BOOL_DRYR
 
     f.close()
 
-    return Str_path_new_content_file
+    # print(Str_path_new_content_file)
+    # print(Str_path_new_content_file.split("/")[-1])
+
+    # quit()
+
+    return Str_path_new_content_file.split("/")[-1]
 
 
 def extract_information(FILE_PATH, CONTENT_PREX, BOOL_DRYRUN):
@@ -141,7 +146,7 @@ def extract_information(FILE_PATH, CONTENT_PREX, BOOL_DRYRUN):
 
     # Erstellt Datei mit Inhalt in richtigem Ordner
     if Str_entry_type == "CONTENT":
-        Str_content_committed = create_new_contentfile(Str_dataset_content_path, cfg.Str_path_content_directory, CONTENT_PREX, BOOL_DRYRUN)
+        Str_content_committed = create_new_contentfile(Str_dataset_content_path, cfg.Str_path_datapoint_directory, CONTENT_PREX, BOOL_DRYRUN)
 
     elif Str_entry_type == "QUOTE":
         Str_quote_committed = create_new_contentfile(Str_dataset_quote_path, cfg.Str_path_citation_directory , CONTENT_PREX, BOOL_DRYRUN)

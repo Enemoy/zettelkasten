@@ -17,7 +17,7 @@ bibfile_complete = "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/bib_complete.b
 Str_path_bibfolder =  "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/Bibs/"
 
 # Path to the directory where all the datapoint contents are stored
-Str_path_content_directory = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/datapoint_files/"
+Str_path_datapoint_directory = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/datapoint_files/"
 
 # Path to the directory where all the citations are stored
 Str_path_citation_directory = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/citation_files/"
@@ -45,8 +45,8 @@ DROPDOWN_MENU = "rofi -theme ~/.config/rofi/theme_wide.rasi -dmenu"
 
 # Backups
 database_file_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/bib_sources.db"
-Str_path_content_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/content_files/"
-Str_path_citation_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/datapoint_files/"
+Str_path_datapoint_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/datapoint_files/"
+Str_path_citation_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/citation_files/"
 
 
 #############################################################################################
