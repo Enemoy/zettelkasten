@@ -92,8 +92,9 @@ def multi_query(TABLE, LIST_COLUMN, LIST_SEARCHTERM, BOOL_INKLUSIVE=False, OUTPU
         else:
             # expand the search to the sources table
             if column in LIST_COLUMNS_SOURCES:
-                list_citekey_tmp = query_database(column, search_string, "citekey", cfg.database_bib_sources_tablename)
-                for k in list_citekey_tmp:
+                # output all entries in sources that match the search term and return their citekeys
+                for k in query_database(column, search_string, "citekey", cfg.database_bib_sources_tablename):
+                    # go through all entries in the table that have refer to that citekey.
                     for o in query_database("citekey", k, OUTPUT, TABLE):
                         tmp_list.append(o)
             else:
@@ -152,7 +153,7 @@ def main():
         TABLE = cfg.database_bib_sources_tablename
 
     if TABLE == "1":
-        TABLE = cfg.database_sources_tablename
+        TABLE = cfg.database_bib_sources_tablename
     elif TABLE == "2":
         TABLE = cfg.database_datapoints_tablename
     elif TABLE == "3":
