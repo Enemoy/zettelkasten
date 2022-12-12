@@ -48,6 +48,48 @@ def execute_sql_command(input_command, database = correct_home_path(cfg.database
 
     return
 
+def delete_row(ID, TABLENAME, database = correct_home_path(cfg.database_file)):
+    # Deletes the row with the given id
+    EXECUTE_COMMAND = "DELETE  FROM " + TABLENAME + " WHERE id = " + str(ID) + ";"
+
+    if TABLENAME == cfg.database_datapoints_tablename:
+        GETPATH_COMMAND = "SELECT content_path FROM " + TABLENAME + " WHERE id = " + str(ID) + ";"
+    elif TABLENAME  == cfg.database_citations_tablename:
+        GETPATH_COMMAND = "SELECT quote_path FROM " + TABLENAME + " WHERE id = " + str(ID) + ";"
+    else:
+        print("Error! The table you chose does not exist!")
+
+    try:
+        conn = sqlite3.connect(database)
+        c = conn.cursor()
+
+        if TABLENAME == cfg.database_datapoints_tablename:
+            Str_content_path = cfg.Str_path_datapoint_directory
+        elif TABLENAME  == cfg.database_citations_tablename:
+            Str_content_path = cfg.Str_path_citation_directory
+        else:
+            print("Error! The table you chose does not exist!")
+
+        Str_content_path = correct_home_path(Str_content_path)
+
+        for row in c.execute(GETPATH_COMMAND):
+             Str_content_path += row[0]
+
+        # Remove content file if it exists
+        if os.path.isfile(Str_content_path):
+            os.remove(Str_content_path)
+
+        # Delete Row in database
+        c.execute(EXECUTE_COMMAND)
+
+        conn.commit()
+
+    except sqlite3.OperationalError as e:
+        print("SQL OperationalError. You probably chose a wrong column!")
+        print(e)
+
+    return
+
 def pretty_format_source(INPUT_ROW):
     # Formats the outout as a pretty source (maybe even in APA)?
     OUTPUT_STRING = "ID: " + str(INPUT_ROW[0]) + ": " + INPUT_ROW[1]
@@ -56,10 +98,10 @@ def pretty_format_source(INPUT_ROW):
 
 def pretty_format_datapoint(INPUT_ROW):
     # Formats the output as a pretty datapoint with the path
-    OUTPUT_STRING = "ID: " + str(INPUT_ROW[0]) + ": " + INPUT_ROW[1]    # Add id and citekey
-    OUTPUT_STRING += " | Seiten / Stelle: " + INPUT_ROW[2]              # Add page / location
-    OUTPUT_STRING += "\n" + INPUT_ROW[3]                                # Add Summary
-    OUTPUT_STRING += "\n" + "Pfad: " + cfg.Str_path_datapoint_directory + INPUT_ROW[4]                     # Add Path
+    OUTPUT_STRING = "ID: " + str(INPUT_ROW[0]) + ": " + INPUT_ROW[1]                    # Add id and citekey
+    OUTPUT_STRING += " | Seiten / Stelle: " + INPUT_ROW[2]                              # Add page / location
+    OUTPUT_STRING += "\n" + INPUT_ROW[3]                                                # Add Summary
+    OUTPUT_STRING += "\n" + "Pfad: " + cfg.Str_path_datapoint_directory + INPUT_ROW[4]  # Add Path
 
     # Add tags
     OUTPUT_STRING += "\nTags: "
