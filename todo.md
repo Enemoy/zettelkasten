@@ -36,5 +36,4 @@
 	- leichtere Organisation
 	- leichterer Umgang mit Flags (?!)
 - rows über eine bestimmte Range löschen / mehrere angeben
-- Spaltenname für "content_path" und "quote_path" zu "path" ändern, um einige if-statements zu vermeiden
 

@@ -22,7 +22,7 @@ list_table_choices = [cfg.database_datapoints_tablename, cfg.database_citations_
 
 DB_PATH = zfn.correct_home_path(cfg.database_file)
 
-def change_textfile_content(input_command, database=DB_PATH):
+def change_textfile_content(input_command, TABLE, database=DB_PATH):
     # This function extracts the file path to edit and creates a bash command to make editing in the system editor possible.
 
     conn = sqlite3.connect(database)
@@ -39,9 +39,18 @@ def change_textfile_content(input_command, database=DB_PATH):
 
     conn.commit()
 
-    if PATH != "":
-        EDITOR = os.environ.get('EDITOR', 'vim')
-        subprocess.call([EDITOR, PATH])
+    if PATH == "":
+        return
+
+    if TABLE == cfg.database_datapoints_tablename:
+        PATH = cfg.Str_path_datapoint_directory + PATH
+    elif TABLE == cfg.database_citations_tablename:
+        PATH = cfg.Str_path_citation_directory + PATH
+    else:
+        print("Table doesn't exist in the database!")
+
+    EDITOR = os.environ.get('EDITOR', 'vim')
+    subprocess.call([EDITOR, zfn.correct_home_path(PATH)])
 
     return
 
@@ -49,7 +58,7 @@ def change_entry(TABLENAME, ID, COLUMN, NEW_VALUE):
 
     if NEW_VALUE == None:
         EXECUTE_COMMAND = "SELECT " + COLUMN + " FROM " + TABLENAME + " WHERE id = " + str(ID) + ";"
-        change_textfile_content(EXECUTE_COMMAND)
+        change_textfile_content(EXECUTE_COMMAND, TABLENAME)
     else:
         EXECUTE_COMMAND = "UPDATE " + TABLENAME + " SET " + COLUMN + " = '" + NEW_VALUE + "' WHERE id = " + str(ID) + ";"
         zfn.execute_sql_command(EXECUTE_COMMAND)
@@ -64,20 +73,12 @@ def main():
     parser.add_argument("-n", "--new_value", type=str, help=Str_flag_entry)
     args = parser.parse_args()
 
-    list_content_edit_options = ["content_path", "quote_path", "path"]
-
-    if args.column not in list_content_edit_options:
+    if args.column != "path":
         if args.new_value == None:
             print("You have to input a -n argument if you choose this column.")
             quit()
 
-    if args.column == "path":
-        if args.table == cfg.database_datapoints_tablename:
-            COLUMN = "content_path"
-        if args.table == cfg.database_citations_tablename:
-            COLUMN = "quote_path"
-    else:
-        COLUMN = args.column
+    COLUMN = args.column
 
     change_entry(args.table, args.id, COLUMN, args.new_value)
 

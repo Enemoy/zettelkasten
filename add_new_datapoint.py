@@ -164,13 +164,34 @@ def extract_information(FILE_PATH, CONTENT_PREX, BOOL_DRYRUN):
     quote_path = Str_quote_committed
 
     # Construct SQL-Command for either citation or datapoint collection.
-    if content_path != "" and quote_path == "":
-        sql_values = "'" + Str_dataset_citekey + "','" + Str_dataset_page + "','" + Str_dataset_summary + "','" + content_path + "','" + Str_dataset_tag_1 + "','" + Str_dataset_tag_2 + "','" + Str_dataset_tag_3 + "','" + Str_dataset_tag_4 + "','" + Str_dataset_tag_5 + "'"
-        sql_command = "INSERT INTO " + cfg.database_datapoints_tablename + "(citekey,page,summary,content_path,tag_1,tag_2,tag_3,tag_4,tag_5) VALUES(" + sql_values + ")"
+    if Str_content_committed != "" and Str_quote_committed == "":
+        sql_values = "'" + Str_dataset_citekey + "','"
+        sql_values += Str_dataset_page + "','"
+        sql_values += Str_dataset_summary + "','"
+        sql_values += content_path + "','"
+        sql_values += Str_dataset_tag_1 + "','"
+        sql_values += Str_dataset_tag_2 + "','"
+        sql_values += Str_dataset_tag_3 + "','"
+        sql_values += Str_dataset_tag_4 + "','"
+        sql_values += Str_dataset_tag_5 + "'"
 
-    elif content_path == "" and quote_path != "":
-        sql_values = "'" + Str_dataset_citekey + "','" + Str_dataset_page + "','" + quote_path + "','" + Str_dataset_tag_1 + "','" + Str_dataset_tag_2 + "','" + Str_dataset_tag_3 + "','" + Str_dataset_tag_4 + "','" + Str_dataset_tag_5 + "'"
-        sql_command = "INSERT INTO " + cfg.database_citations_tablename  + "(citekey,page,quote_path,tag_1,tag_2,tag_3,tag_4,tag_5) VALUES(" + sql_values + ")"
+        sql_command = "INSERT INTO " + cfg.database_datapoints_tablename
+        sql_command += "(citekey,page,summary,path,tag_1,tag_2,tag_3,tag_4,tag_5) VALUES(" + sql_values + ")"
+
+    elif Str_content_committed == "" and Str_quote_committed != "":
+        # sql_values = "'" + Str_dataset_citekey + "','" + Str_dataset_page + "','" + quote_path + "','" + Str_dataset_tag_1 + "','" + Str_dataset_tag_2 + "','" + Str_dataset_tag_3 + "','" + Str_dataset_tag_4 + "','" + Str_dataset_tag_5 + "'"
+        # sql_command = "INSERT INTO " + cfg.database_citations_tablename  + "(citekey,page,path,tag_1,tag_2,tag_3,tag_4,tag_5) VALUES(" + sql_values + ")"
+        sql_values = "'" + Str_dataset_citekey + "','"
+        sql_values += Str_dataset_page + "','"
+        sql_values += quote_path + "','"
+        sql_values += Str_dataset_tag_1 + "','"
+        sql_values += Str_dataset_tag_2 + "','"
+        sql_values += Str_dataset_tag_3 + "','"
+        sql_values += Str_dataset_tag_4 + "','"
+        sql_values += Str_dataset_tag_5 + "'"
+
+        sql_command = "INSERT INTO " + cfg.database_citations_tablename
+        sql_command += "(citekey,page,path,tag_1,tag_2,tag_3,tag_4,tag_5) VALUES(" + sql_values + ")"
 
     return sql_command
 

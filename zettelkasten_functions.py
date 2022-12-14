@@ -52,12 +52,9 @@ def delete_row(ID, TABLENAME, database = correct_home_path(cfg.database_file)):
     # Deletes the row with the given id
     EXECUTE_COMMAND = "DELETE  FROM " + TABLENAME + " WHERE id = " + str(ID) + ";"
 
-    if TABLENAME == cfg.database_datapoints_tablename:
-        GETPATH_COMMAND = "SELECT content_path FROM " + TABLENAME + " WHERE id = " + str(ID) + ";"
-    elif TABLENAME  == cfg.database_citations_tablename:
-        GETPATH_COMMAND = "SELECT quote_path FROM " + TABLENAME + " WHERE id = " + str(ID) + ";"
-    else:
-        print("Error! The table you chose does not exist!")
+    # Missing error message for table?
+
+    GETPATH_COMMAND = "SELECT path FROM " + TABLENAME + " WHERE id = " + str(ID) + ";"
 
     try:
         conn = sqlite3.connect(database)
@@ -92,7 +89,11 @@ def delete_row(ID, TABLENAME, database = correct_home_path(cfg.database_file)):
 
 def pretty_format_source(INPUT_ROW):
     # Formats the outout as a pretty source (maybe even in APA)?
-    OUTPUT_STRING = "ID: " + str(INPUT_ROW[0]) + ": " + INPUT_ROW[1]
+    OUTPUT_STRING = "ID: " + str(INPUT_ROW[0]) + ": " + INPUT_ROW[1]    # Add id and citekey
+    OUTPUT_STRING += " (" + INPUT_ROW[2] + ")\n"                        # Add entrytype
+    OUTPUT_STRING += INPUT_ROW[4] + " ("                                # Add title
+    OUTPUT_STRING += INPUT_ROW[3] + "; "                                # Add author
+    OUTPUT_STRING += INPUT_ROW[5] + ")"                                 # Add year
 
     return OUTPUT_STRING
 

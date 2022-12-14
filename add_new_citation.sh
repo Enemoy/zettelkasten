@@ -25,6 +25,7 @@ help_function(){
 }
 
 open_terminal(){
+	TMP_CLIPBOARD=$(xclip -o -selection "clipboard")
 	FORM_DATA=$(zenity --forms --width=500 --title="Citation information" \
 		--text="Please enter the data for your citation entry." \
 		--add-entry="Citekey"  \
@@ -34,6 +35,8 @@ open_terminal(){
 		--add-entry="Tag 3" \
 		--add-entry="Tag 4" \
 		--add-entry="Tag 5" )
+
+	echo $TMP_CLIPBOARD | xclip -i -selection "clipboard"
 
 	# extract variables from zenity input.
 	CITEKEY=$(echo $FORM_DATA | awk -F '|' '{printf $1}')

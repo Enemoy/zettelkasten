@@ -33,12 +33,16 @@ def query_database(COLUMN, SEARCH_TERM, OUTPUT, TABLE):
         COLUMN = "(tag_1 || tag_2 || tag_3 || tag_4 || tag_5)"
 
 
-    if COLUMN == "id":
-        EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " = " + SEARCH_TERM + ";"
+    if SEARCH_TERM == "all" and COLUMN == "all":
+        EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + ";"
     else:
-        EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " LIKE '%" + SEARCH_TERM + "%';"
+        if COLUMN == "id":
+            EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " = " + SEARCH_TERM + ";"
+        else:
+            EXECUTE_COMMAND = "SELECT " + OUTPUT +   " FROM " + TABLE + " WHERE " + COLUMN + " LIKE '%" + SEARCH_TERM + "%';"
 
     c = conn.cursor()
+
 
     try:
         for row in c.execute(EXECUTE_COMMAND):
@@ -61,15 +65,21 @@ def query_database(COLUMN, SEARCH_TERM, OUTPUT, TABLE):
 
     return return_list
 
+
 def multi_query(TABLE, LIST_COLUMN, LIST_SEARCHTERM, BOOL_INKLUSIVE=False, OUTPUT="citekey"):
 
-    if LIST_COLUMN == None or LIST_SEARCHTERM == None:
-        print("You have to provide more arguments!")
-        quit()
+    if LIST_COLUMN == None and LIST_SEARCHTERM == None:
+        # Get all entries in the table if no search term or column are given!
+        return_list = query_database("all", "all", OUTPUT, TABLE)
+        return return_list
+    else:
+        if LIST_COLUMN == None or LIST_SEARCHTERM == None:
+            print("You have to provide more arguments!")
+            quit()
 
-    if len(LIST_COLUMN) != len(LIST_SEARCHTERM):
-        print("The amount of columns and strings have to be the same!")
-        quit()
+        if len(LIST_COLUMN) != len(LIST_SEARCHTERM):
+            print("The amount of columns and strings have to be the same!")
+            quit()
 
     if len(LIST_COLUMN) == 1:
         #print("Ignoring inklusive flag as you only provided one search term!")
@@ -83,6 +93,10 @@ def multi_query(TABLE, LIST_COLUMN, LIST_SEARCHTERM, BOOL_INKLUSIVE=False, OUTPU
 
     LIST_COLUMNS_CURRENT = zfn.get_column_names(TABLE)
     LIST_COLUMNS_SOURCES = zfn.get_column_names(cfg.database_bib_sources_tablename)
+
+    # Add tags as a possible output parameter
+    if TABLE != cfg.database_bib_sources_tablename:
+        LIST_COLUMNS_CURRENT.append("tags")
 
     tmp_list = []
     for column, search_string in zip(LIST_COLUMN, LIST_SEARCHTERM):
@@ -162,15 +176,18 @@ def main():
         STR_PATH_CONTENT_BASE = cfg.Str_path_citation_directory
 
     # Todo: if no args.string, print all entries
-    if not args.column or not args.string:
+    if not args.column and not args.string:
+        output_list = multi_query(TABLE, None, None, args.inklusive, STR_OUTPUT_TYPE)
+    elif  not args.string:
         print("You have put search term into the machine!")
         quit()
-
-    for c in args.column:
-        output_list = multi_query(TABLE, args.column, args.string, args.inklusive, STR_OUTPUT_TYPE)
-
-    # 1. Make citekey list from matching sources entries
-    # 2. Make id list from previous list where citekeys match
+    elif not args.column:
+        print("Missing feature: Look through all columns, sources and current.")
+        print("You have to chose a column in which to look for the matching string.")
+        quit()
+    else:
+        for c in args.column:
+            output_list = multi_query(TABLE, args.column, args.string, args.inklusive, STR_OUTPUT_TYPE)
 
     for e in output_list:
         if BOOL_PRINT_PRETTY == True:
@@ -178,8 +195,9 @@ def main():
             if e != output_list[len(output_list)-1]:
                 print("----\n")
         else:
-            if args.output == "content_path" or args.output == "quote_path":
-                print_output = STR_PATH_CONTENT_BASE + e
+            if args.output == "path":
+                # add path to filename
+                print_output = zfn.correct_home_path(STR_PATH_CONTENT_BASE) + e
                 print(print_output)
             else:
                 print(e)
