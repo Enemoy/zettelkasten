@@ -48,11 +48,17 @@ database_file_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/bib_source
 Str_path_datapoint_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/datapoint_files/"
 Str_path_citation_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/citation_files/"
 
+# Path to sourcecode
+Str_path_sourcecode = "~/.bin/zettelkasten/"
+
 
 #############################################################################################
 #Don't change
 all_variables = vars()
 HOME = os.path.expanduser( '~' )
+
+if Str_path_sourcecode.startswith("~"):
+    Str_path_sourcecode = HOME + Str_path_sourcecode[1:]
 
 #The main body of the config exists to parse the variables of the config file to a bash script.
 def main(input_list):
