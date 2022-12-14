@@ -83,8 +83,7 @@ case $1 in
 
 	help)
 		echo -e "Options: \n\tquery\n\tconvert\n\tbackup\n\tcreate\n\tedit\n\tcitekey\n\tdelete\n\tcheck\n\tchange\n\tcitation\n\tdatapoint\n\tconfig"
-		echo -e "Choose one of these options!"
-		exit 0
+		echo -e "Choose one of these options!\nIf you want more usage information, add the --help / -h flag after the first argument."
 		;;
 
 	*)

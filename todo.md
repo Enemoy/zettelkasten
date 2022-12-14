@@ -3,21 +3,12 @@
 
 ## neue Funktionen
 
-- Funktion um einzelne Inhalte zu ändern (Zentiy / Terminal):
-	- Argument 1: id (zur Bearbeitung)
-	- Argument 2: Terminal oder Popup?
-	- Argument 3: Spalte, die geändert werden soll
-- Bash script, dass auf Suite zugreift:
-	- Argument 1: Auswahl des Sub-Programm
-	- Weitergabe alle anderen Argumente an Sub-Programm
 - Bash-Script um im Browser eine Website als Quelle hinzuzufügen:
 	- automatisches Auswählen des Links
 	- hinzufügen per Script
 	- Abfrage von Titel / Autor
 	- automatisches Hinzufügen von Datum als "zuletzt aufgerufen"
 	- Auswahl der Bibliografie, zu der Quelle hinzugefügt werden soll (Default: Online)
-- Löschen einzelner rows aus datapoints / citations:
-	- automatisches löschen der zugehörigen Content Datei
 
 ## Verbesserungen / Überarbeitungen
 
@@ -31,9 +22,7 @@
 	- Suchen in allen Tabellen
 - tags zu .bib-Einträgen hinzuzufügen:
 	- Weiterverarbeitung in der Tags aus Bibtex
-- longterm:
-	- Zusammenfassung aller Funktionen in main.py und functions.py
-	- leichtere Organisation
-	- leichterer Umgang mit Flags (?!)
 - rows über eine bestimmte Range löschen / mehrere angeben
+- argparse mit "" Strings konfigurieren
+- Wenn citekey (wegen z.B. Änderung) nicht gefunden wird, Fehlermeldung über nicht vorhanden citekey bei query Funktion
 

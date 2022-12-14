@@ -89,11 +89,18 @@ def delete_row(ID, TABLENAME, database = correct_home_path(cfg.database_file)):
 
 def pretty_format_source(INPUT_ROW):
     # Formats the outout as a pretty source (maybe even in APA)?
+    # Prevent error for adding None-type
+    PUBLISHER = INPUT_ROW[6]
+
+    if PUBLISHER == None:
+        PUBLISHER = ""
+
     OUTPUT_STRING = "ID: " + str(INPUT_ROW[0]) + ": " + INPUT_ROW[1]    # Add id and citekey
     OUTPUT_STRING += " (" + INPUT_ROW[2] + ")\n"                        # Add entrytype
     OUTPUT_STRING += INPUT_ROW[4] + " ("                                # Add title
     OUTPUT_STRING += INPUT_ROW[3] + "; "                                # Add author
-    OUTPUT_STRING += INPUT_ROW[5] + ")"                                 # Add year
+    OUTPUT_STRING += INPUT_ROW[5] + " "                                 # Add year
+    OUTPUT_STRING += PUBLISHER + ")"                                    # Add publisher
 
     return OUTPUT_STRING
 
@@ -134,6 +141,10 @@ def pretty_format_citation(INPUT_ROW):
             AUTHOR = row[3]
             TITLE = row[4]
             YEAR = row[5]
+            PUBLISHER = row[6]
+            print(PUBLISHER, "liebe")
+            if PUBLISHER == None:
+                PUBLISHER = ""
 
     except Exception as e:
         print(e)
@@ -146,7 +157,8 @@ def pretty_format_citation(INPUT_ROW):
     OUTPUT_STRING += "\n\t\"" + CITATION + "\""                         # Add citation itself
     OUTPUT_STRING += "\n\t\t - " + AUTHOR                               # Add author
     OUTPUT_STRING += ", " + TITLE                                       # Add title
-    OUTPUT_STRING += " (" + YEAR + " p.d.)"                             # Add publishing year
+    OUTPUT_STRING += " (" + YEAR + " "                                  # Add publishing year
+    OUTPUT_STRING += PUBLISHER + ")"                                    # Add publisher
 
     # Add tags
     OUTPUT_STRING += "\nTags: "
