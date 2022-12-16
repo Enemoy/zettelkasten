@@ -10,3 +10,4 @@ content_files/
 citation_files/
 test_dataset.py
 setup_and_populate.sh
+tags

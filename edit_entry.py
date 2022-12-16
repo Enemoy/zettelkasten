@@ -18,7 +18,7 @@ Str_flag_entry="The new value the column should have (will be ignored if the con
 Str_manual_description="This script changes the column value of an entry in a specific table."
 Str_manual_usage="Usage"
 
-list_table_choices = [cfg.database_datapoints_tablename, cfg.database_citations_tablename]
+list_table_choices = [cfg.database_datapoints_tablename, cfg.database_citations_tablename, "2", "3"]
 
 DB_PATH = zfn.correct_home_path(cfg.database_file)
 
@@ -78,9 +78,17 @@ def main():
             print("You have to input a -n argument if you choose this column.")
             quit()
 
+    if args.table == "2":
+        TABLE = cfg.database_datapoints_tablename
+    elif args.table == "3":
+        TABLE = cfg.database_citations_tablename
+    else:
+        TABLE = args.table
+
+
     COLUMN = args.column
 
-    change_entry(args.table, args.id, COLUMN, args.new_value)
+    change_entry(TABLE, args.id, COLUMN, args.new_value)
 
 
 if __name__ == "__main__":

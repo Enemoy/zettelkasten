@@ -71,6 +71,9 @@ def main(input_list):
                 myvalue = "0"
             elif myvalue == "True":
                 myvalue = "1"
+            elif myvalue.startswith("~"):
+                #if os.isfile(myvalue) or os.ispath(myvalue):
+                myvalue = HOME + myvalue[1:]
             print("export " + name + "=\"" + myvalue + "\"")
 
 if __name__ == "__main__":

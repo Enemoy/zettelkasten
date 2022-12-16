@@ -1,0 +1,15 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/b6841a1/
+Str_manual_description	delete_rows.py	/^Str_manual_description = "This script will delete the row with the id you have given as an argum/;"	v
+Str_manual_flag_id	delete_rows.py	/^Str_manual_flag_id = "The id of the entry you want to delete."$/;"	v
+Str_manual_flag_table	delete_rows.py	/^Str_manual_flag_table = "Which table you want to chose. Default: " + cfg.database_datapoints_tab/;"	v
+Str_manual_usage	delete_rows.py	/^Str_manual_usage = "Usage: .\/delete_rows.py -t [TABLE] -i [ID]"$/;"	v
+cfg	delete_rows.py	/^import main_config as cfg$/;"	I
+list_table_options	delete_rows.py	/^list_table_options = ["2", "3", cfg.database_datapoints_tablename, cfg.database_citations_tablen/;"	v
+main	delete_rows.py	/^def main():$/;"	f
+zfn	delete_rows.py	/^import zettelkasten_functions as zfn$/;"	I
