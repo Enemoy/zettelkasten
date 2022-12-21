@@ -9,13 +9,13 @@ eval `/home/simon/.bin/zettelkasten/main_config.py`
 
 case $1 in
 
-	query)
+	query | search | find)
 		#echo "Query"
 		shift
 		${Str_path_sourcecode}query_database.py  $@
 		;;
 
-	convert)
+	convert | compile)
 		#echo "bibfile converter"
 		shift
 		${Str_path_sourcecode}bib_file_converter.py  $@
@@ -27,7 +27,7 @@ case $1 in
 		${Str_path_sourcecode}backup_files.py  $@
 		;;
 
-	create)
+	create | setup)
 		#echo "creating database"
 		shift
 		${Str_path_sourcecode}create_database.py  $@

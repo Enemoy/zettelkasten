@@ -142,7 +142,6 @@ def pretty_format_citation(INPUT_ROW):
             TITLE = row[4]
             YEAR = row[5]
             PUBLISHER = row[6]
-            print(PUBLISHER, "liebe")
             if PUBLISHER == None:
                 PUBLISHER = ""
 
