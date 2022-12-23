@@ -28,15 +28,20 @@ def create_new_contentfile(FILE_PATH, STORAGE_DIRECTORY, CONTENT_PREX, BOOL_DRYR
         - check if random filename already exists
     """
     Str_filename_random = ""
+    Bool_file_exists = True
 
-    for i in range(30):
-        Str_filename_random += random.choice(string.ascii_uppercase)
+    while Bool_file_exists == True:
+        for i in range(30):
+            Str_filename_random += random.choice(string.ascii_uppercase)
 
-    Str_path_new_content_file = STORAGE_DIRECTORY + Str_filename_random + ".md"
+        Str_path_new_content_file = STORAGE_DIRECTORY + Str_filename_random + ".md"
 
 
-    if Str_path_new_content_file.startswith("~"):
-        Str_path_new_content_file = cfg.HOME + Str_path_new_content_file[1:]
+
+        if Str_path_new_content_file.startswith("~"):
+            Str_path_new_content_file = cfg.HOME + Str_path_new_content_file[1:]
+
+        Bool_file_exists = zfn.check_file_exists(Str_path_new_content_file)
 
     f = open(Str_path_new_content_file, "w")
 

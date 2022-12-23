@@ -18,6 +18,12 @@ def correct_home_path(INPUT_PATH):
 
     return OUTPUT_PATH
 
+def check_file_exists(PATH):
+    if os.path.isfile(PATH):
+        return True
+    else:
+        return False
+
 def get_column_names(TABLENAME, database = correct_home_path(cfg.database_file)):
     # Creates a list of column names of a table
     conn = sqlite3.connect(database)

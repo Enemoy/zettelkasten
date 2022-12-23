@@ -81,7 +81,7 @@ case $1 in
 		$EDITOR ${Str_path_sourcecode}main_config.py
 		;;
 
-	help)
+	help | -h | --help)
 		echo -e "Options: \n\tquery\n\tconvert\n\tbackup\n\tcreate\n\tedit\n\tcitekey\n\tdelete\n\tcheck\n\tchange\n\tcitation\n\tdatapoint\n\tconfig"
 		echo -e "Choose one of these options!\nIf you want more usage information, add the --help / -h flag after the first argument."
 		;;
