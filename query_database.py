@@ -14,7 +14,7 @@ Str_manual_description = "This script can query the different tables in the data
 Str_manual_flag_table = "Which table you want to chose. Default: " + cfg.database_bib_sources_tablename
 Str_manual_flag_output = "Which column to output."
 Str_manual_flag_column = "Which column to query."
-Str_manual_flag_string = "Search term you want to query."
+Str_manual_flag_string = "Search term you want to query. If column is \"id\", you can input \"last\" to print the last entry added to the table."
 Str_manual_flag_inklusive = "Search inklusivly."
 
 DB_PATH = zfn.correct_home_path(cfg.database_file)
@@ -152,8 +152,6 @@ def main():
     args = parser.parse_args()
 
 
-    # print("inklusive does not work with query over sources. Fix this")
-
     BOOL_PRINT_PRETTY = False
     STR_OUTPUT_TYPE = args.output
 
@@ -175,9 +173,14 @@ def main():
         TABLE = cfg.database_citations_tablename
         STR_PATH_CONTENT_BASE = cfg.Str_path_citation_directory
 
-    # Todo: if no args.string, print all entries
     if not args.column and not args.string:
         output_list = multi_query(TABLE, None, None, args.inklusive, STR_OUTPUT_TYPE)
+    elif "id" in args.column and "last" in args.string:
+        output_list = multi_query(TABLE, None, None, args.inklusive, STR_OUTPUT_TYPE)
+        # print(type(output_list))
+        # print(output_list[-1])
+        # quit()
+        output_list = [output_list[-1]]
     elif  not args.string:
         print("You have put search term into the machine!")
         quit()
