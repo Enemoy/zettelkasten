@@ -23,10 +23,6 @@ Str_path_databasefile=cfg.database_file
 
 def create_new_contentfile(FILE_PATH, STORAGE_DIRECTORY, CONTENT_PREX, BOOL_DRYRUN):
     # Creates a new content-file in the corresponding folder an returns the path to the file as a string.
-    """
-    Todo:
-        - check if random filename already exists
-    """
     Str_filename_random = ""
     Bool_file_exists = True
 
@@ -201,11 +197,9 @@ def extract_information(FILE_PATH, CONTENT_PREX, BOOL_DRYRUN):
     return sql_command
 
 def main():
-    # Set up the argument input
     parser = argparse.ArgumentParser(description=Str_manual_description, usage=Str_manual_usage, add_help=True)
     parser.add_argument("-f", "--file", type=str, help=Str_manual_flag_file)
     parser.add_argument("-c", "--clipboard", action="store_true", help=Str_manual_flag_clipboard)
-    #parser.add_argument("-t", "--terminal", action="store_true", help=Str_manual_flag_terminal)
     parser.add_argument("-p", "--preexisting", type=str, help=Str_manual_flag_preexisting)
     parser.add_argument("-d", "--dryrun", action="store_true", help=Str_manual_flag_dryrun)
     args = parser.parse_args()

@@ -8,6 +8,9 @@ import os
 import argparse
 import main_config as cfg
 
+Str_manual_description="This script will check all the citekeys in datapoints and citations are still in the sources table. This might not be the case if the sources have been recompiled and some citekeys were changed."
+Str_manual_usage="zettelkasten check [-h]"
+
 # This script checks if the citekeys in datapoints and in citations are still in sources.
 def check_citekeys(PATH_TO_DATABASE = cfg.database_file, SOURCES_TABLE = cfg.database_bib_sources_tablename, DATAPOINT_TABLE = cfg.database_datapoints_tablename, CITATIONS_TABLE = cfg.database_citations_tablename):
     # Check if citekeys are still there. Default to the database values in the config file.
@@ -55,6 +58,9 @@ def check_citekeys(PATH_TO_DATABASE = cfg.database_file, SOURCES_TABLE = cfg.dat
     return list_return
 
 def main():
+    parser = argparse.ArgumentParser(description=Str_manual_description, usage=Str_manual_usage, add_help=True)
+    args = parser.parse_args()
+
     list_output = check_citekeys()
 
     for e in list_output:

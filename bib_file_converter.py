@@ -7,13 +7,11 @@ import argparse
 import main_config as cfg
 import zettelkasten_functions as zfn
 
-# Todo
-# - Improve special character replacement
+Str_manual_usage="zettelkasten convert [-d DIRECTORY] [-f FILES] [-r]"
+Str_manual_description="This script converts contents of .bib-files into entries for a database and adds it to the corresponding table in the corresponding database configured in the config file."
 Str_flag_repopulate="Give this flag, if the sources_collection table should be emptied and repopulated."
 Str_flag_directory="Adds the entries of all the .bib-files in the directory to the database."
 Str_flag_file="Adds the content of a single file to the database."
-Str_manual_description="This script converts contents of .bib-files into entries for a database and adds it to the corresponding table in the corresponding database configured in the config file."
-Str_manual_usage="Usage"
 
 def repopulate(DATBASE, TABLENAME):
     # Empties the content of the sources_collection table in the database.

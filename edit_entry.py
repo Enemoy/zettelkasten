@@ -11,12 +11,12 @@ import zettelkasten_functions as zfn
 # This function edits specific entries in datapoints or citations.
 # If the content will be edited, instead of editing the path, the system editor will be used.
 
+Str_manual_usage="zettelkasten edit -t [TABLE] -i [id] -c [COLUMN]"
+Str_manual_description="This script changes the column value of an entry in datapoints or citations."
 Str_flag_table="Choose the table in which you want to edit an entry."
 Str_flag_id="Choose the id of the entry you want to edit."
 Str_flag_column="The column you want to edit."
-Str_flag_entry="The new value the column should have (will be ignored if the content is edited"
-Str_manual_description="This script changes the column value of an entry in a specific table."
-Str_manual_usage="Usage"
+Str_flag_entry="The new value the column should have (will be ignored if the content is edited)"
 
 list_table_choices = [cfg.database_datapoints_tablename, cfg.database_citations_tablename, "2", "3"]
 
@@ -70,7 +70,7 @@ def main():
     parser.add_argument("-t", "--table", type=str, default=cfg.database_datapoints_tablename, choices = list_table_choices , help=Str_flag_table)
     parser.add_argument("-i", "--id", type=int, required=True, help=Str_flag_id)
     parser.add_argument("-c", "--column", type=str, required=True, help=Str_flag_column)
-    parser.add_argument("-n", "--new_value", type=str, help=Str_flag_entry)
+    parser.add_argument("-n", "--new-value", type=str, help=Str_flag_entry)
     args = parser.parse_args()
 
     if args.column != "path":

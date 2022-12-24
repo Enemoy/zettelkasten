@@ -9,7 +9,7 @@ import argparse
 import main_config as cfg
 import zettelkasten_functions as zfn
 
-Str_manual_usage = "Usage"
+Str_manual_usage = "zettelkasten query -t [TABLE] -c [COLUMN] -s [STRING] [-o OUTPUT]"
 Str_manual_description = "This script can query the different tables in the database. You always have to pair one column (-c) with one string to search (-s)"
 Str_manual_flag_table = "Which table you want to chose. Default: " + cfg.database_bib_sources_tablename
 Str_manual_flag_output = "Which column to output."

@@ -7,7 +7,7 @@ import main_config as cfg
 import os
 import argparse
 
-usage_string="Compile all bibfiles from one folder to a singe file."
+usage_string="zettelkasten convert [-i INPUT_FOLDER] [-o OUTPUT_FILE]"
 description_string="This module will compile all bibliography-files from one folder into one single file without creating any duplicates."
 file_help_text="The file you want to compile to. Type \"standard\" to use or standard bib-file."
 input_help_text="The input folder containing the bibliography-files."
@@ -21,7 +21,7 @@ def create_main_bib(INPUT_FOLDER):
         #This line checks if the file is a bib-file
         if file.endswith(".bib") or file.endswith(".bibtex"):
             with open(file) as f:
-                # Needs improovement, see ONE
+                # Check not for duplicates, but for duplicate citekeys
                 for line in f:
                     if line.startswith("@"):
                         temp_string = line

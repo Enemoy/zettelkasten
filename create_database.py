@@ -4,7 +4,11 @@ import sqlite3
 import bib_file_converter
 import os
 import main_config as cfg
+import argparse
 import zettelkasten_functions as zfn
+
+Str_manual_description="This script will create the database, the tables inside it and the content folders for quotes and datapoints. The variables are stored in the config file."
+Str_manual_usage="zettelkasten create [-h/--help]"
 
 # Creates the database and the three different tables in it.
 # If the table already exists, it won't be created.
@@ -147,10 +151,9 @@ def create_citations_table(PATH_TO_DATABASE, TABLENAME):
     return
 
 def main():
-    # if cfg.Str_path_bibfolder.startswith("~"):
-    #     DB_PATH = cfg.HOME + cfg.database_file [1:]
-    # else:
-    #     DB_PATH  = cfg.database_file
+    parser = argparse.ArgumentParser(description=Str_manual_description, usage=Str_manual_usage, add_help=True)
+    args = parser.parse_args()
+
     DB_PATH = zfn.correct_home_path(cfg.database_file)
 
     # All the stepts in the procedures of the database creation are in seperate functions so they can be called from other python scripts

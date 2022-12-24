@@ -27,3 +27,68 @@ For example you can:
 
 This README.md will expand in time as the repository grows.
 Also most of the bash and python scripts have their own help options (-h / --help)
+
+
+## Functions of zettelkasten
+
+Here is a list of the different functions and their purpose. Of course, there are seperate help for each of the functions, this is just an overview.
+
+### query / search / find
+
+Allows the user to query the different tables in the database.
+
+### convert
+
+Converts .bib-files into entries for the sources table in the database. You can either specify your own folder or or files with the script or give no folders / files as arguments, in case of which the standard folder from the config file will be used.
+
+### compile
+
+Creates prints all entries in sources into a specific file or the terminal without duplicates. This is useful if you want to have one .bib-file with all your entries to cite from.
+
+### backup
+
+Backs up the database to a preconfigured location.
+
+### create / setup
+
+Sets up the database. This means creating the folders with the content files in them, creating the database file and creating the tables in them, all with their respected preconfigured names and locations.
+
+### edit
+
+Allows the user to edit a column of an entry in datapoints or citations by id. Can also be used to edit the content file.
+
+### citekey
+
+Calls a dmenu with the citekeys, either with all of them or a specific search term for a specify collumn.
+
+### delete
+
+Deletes a row with a certain id in either datapoints or citations.
+
+### check
+
+Checks if the citekeys in datapoints and in citations are still in sources.
+
+### change
+
+Script to change all occurences of a citekey in either datapoints or citations. Usefull if a citekey in sources is changed and the sources are recompiled.
+
+### citation
+
+Adds a new citation to the database.
+
+### datapoint
+
+Adds a new datapoint to the database.
+
+### bibfile
+
+Lets the user choose a bibfile with dmenu or rofi and either puts the path into STOUT or the name of the bibfile into the clipboard.
+
+### config
+
+Calls an editor to edit the config file.
+
+### help
+
+The overview over the options.
