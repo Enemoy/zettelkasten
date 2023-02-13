@@ -15,13 +15,13 @@ case $1 in
 		${Str_path_sourcecode}query_database.py  $@
 		;;
 
-	convert)
+	convert | compile)
 		#echo "bibfile converter"
 		shift
 		${Str_path_sourcecode}bib_file_converter.py  $@
 		;;
 
-	compile)
+	complete)
 		#echo "compiling main bib-file"
 		shift
 		${Str_path_sourcecode}compile_bib.py  $@
@@ -95,7 +95,7 @@ case $1 in
 
 
 	help | -h | --help)
-		echo -e "Options: \n\tquery\n\tconvert\n\tcompile\n\tbackup\n\tcreate\n\tedit\n\tcitekey\n\tdelete\n\tcheck\n\tchange\n\tcitation\n\tdatapoint\n\tbibfile\n\tconfig"
+		echo -e "Options: \n\tquery\n\tconvert\n\tcomplete\n\tbackup\n\tcreate\n\tedit\n\tcitekey\n\tdelete\n\tcheck\n\tchange\n\tcitation\n\tdatapoint\n\tbibfile\n\tconfig"
 		echo -e "Choose one of these options!\nIf you want more usage information, add the --help / -h flag after the first argument."
 		;;
 

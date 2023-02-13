@@ -11,6 +11,7 @@ then
 	echo "This script will allow you to choose a bibfile with dmenu or rofi."
 	echo "The -c flag will copy the name of the bibfile to the clipboard. The -h flag will display this help."
 	exit 0
+fi
 
 TITLE=$(find $Str_path_bibfolder -type f -name "*.bib" |  cut -d'/' -f11- | $DROPDOWN_MENU -p "Choose bibfile")
 TITLE="${TITLE#*\/}"
