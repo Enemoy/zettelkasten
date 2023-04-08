@@ -5,6 +5,7 @@ import string
 import random
 import pyperclip
 import os
+import sys
 import argparse
 import main_config as cfg
 import zettelkasten_functions as zfn
@@ -173,6 +174,19 @@ def main():
         TABLE = cfg.database_citations_tablename
         STR_PATH_CONTENT_BASE = cfg.Str_path_citation_directory
 
+    # Standard input conversion (comment out  this section if there is an issue with argument passing
+    if not sys.stdin.isatty():
+        data = sys.stdin.readlines()
+    else:
+        data = []
+
+    for s in args.string:
+        index_number = args.string.index(s)
+        if data != []:
+            if s == "STDIN":
+                args.string[index_number] = data[index_number % len(data)].strip("\n")
+
+
     if not args.column and not args.string:
         output_list = multi_query(TABLE, None, None, args.inklusive, STR_OUTPUT_TYPE)
     elif "id" in args.column and "last" in args.string:
@@ -189,6 +203,8 @@ def main():
     else:
         for c in args.column:
             output_list = multi_query(TABLE, args.column, args.string, args.inklusive, STR_OUTPUT_TYPE)
+
+
 
     for e in output_list:
         if BOOL_PRINT_PRETTY == True:
