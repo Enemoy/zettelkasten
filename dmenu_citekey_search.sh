@@ -31,7 +31,7 @@ then
 	echo "No arguments given, showing all sources!"
 	sqlite3 $database_file "select citekey,title from $database_bib_sources_tablename;" | awk -F '|' '{printf "%30s - ", $1; printf "%s\n", $2}' | $DROPDOWN_MENU -p "Choose citekey:" | awk '{printf $1}'  | tr -d '()' | xclip -selection "clipboard"
 else
-	sqlite3 $database_file "select citekey,title from $database_bib_sources_tablename where $COLUMN like \"%$STRING%\";" | awk -F '|' '{printf "%30s - ", $1; printf "%s\n", $2}' | $DROPDOWN_MENU -p "Choose citekey:" | awk '{printf $1}'  | tr -d '()' | xclip -selection "clipboard"
+	sqlite3 $database_file "select citekey,title from $database_bib_sources_tablename where $COLUMN like '%$STRING%';" | awk -F '|' '{printf "%30s - ", $1; printf "%s\n", $2}' | $DROPDOWN_MENU -p "Choose citekey:" | awk '{printf $1}'  | tr -d '()' | xclip -selection "clipboard"
 fi
 
 exit 0

@@ -25,4 +25,6 @@
 - rows über eine bestimmte Range löschen / mehrere angeben
 - argparse mit "" Strings konfigurieren
 - Wenn citekey (wegen z.B. Änderung) nicht gefunden wird, Fehlermeldung über nicht vorhanden citekey bei query Funktion
+- read query args for -s option from stdin
+- truncate sql
 

@@ -177,9 +177,7 @@ def main():
         output_list = multi_query(TABLE, None, None, args.inklusive, STR_OUTPUT_TYPE)
     elif "id" in args.column and "last" in args.string:
         output_list = multi_query(TABLE, None, None, args.inklusive, STR_OUTPUT_TYPE)
-        # print(type(output_list))
-        # print(output_list[-1])
-        # quit()
+
         output_list = [output_list[-1]]
     elif  not args.string:
         print("You have put search term into the machine!")

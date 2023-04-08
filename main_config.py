@@ -41,7 +41,7 @@ CITATION_FORM_PATH = "~/.bin/zettelkasten/form_citation"
 POPUP_TERMINAL = "st -c dialogue_dropdown"
 
 # The command for a dropdown menu you want data to be piped to (has to work dmenu-style
-DROPDOWN_MENU = "rofi -theme ~/.config/rofi/theme_wide.rasi -dmenu"
+DROPDOWN_MENU = "rofi -theme ~/.config/rofi/theme_wide.rasi -dmenu -i"
 
 # Backups
 database_file_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/bib_sources.db"
