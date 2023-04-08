@@ -45,7 +45,7 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
 
     c = conn.cursor()
 
-    TABLE_CREATION_COMMAND = "CREATE TABLE " + TABLENAME + """(
+    TABLE_CREATION_COMMAND = "CREATE TABLE " + TABLENAME + """ (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 `citekey` text NOT NULL UNIQUE DEFAULT '',
                 `entrytype` text DEFAULT '',
@@ -85,13 +85,13 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
                 `tag_2` text DEFAULT '',
                 `tag_3` text DEFAULT '',
                 `tag_4` text DEFAULT '',
-                `tag_5` text DEFAULT '',
+                `tag_5` text DEFAULT ''
             )"""
 
     try:
         c.execute(TABLE_CREATION_COMMAND)
     except sqlite3.OperationalError:
-        print("Table already exists:", TABLENAME)
+        print("SQL-Error or: Table already exists:", TABLENAME)
 
     return
 

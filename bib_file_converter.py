@@ -6,6 +6,7 @@ import os
 import argparse
 import main_config as cfg
 import zettelkasten_functions as zfn
+import create_database as crt
 
 Str_manual_usage="zettelkasten convert [-d DIRECTORY] [-f FILES] [-r]"
 Str_manual_description="This script converts contents of .bib-files into entries for a database and adds it to the corresponding table in the corresponding database configured in the config file."
@@ -13,21 +14,38 @@ Str_flag_repopulate="Give this flag, if the sources_collection table should be e
 Str_flag_directory="Adds the entries of all the .bib-files in the directory to the database."
 Str_flag_file="Adds the content of a single file to the database."
 
-def repopulate(DATBASE, TABLENAME):
+def repopulate(DATBASE, TABLENAME=cfg.database_bib_sources_tablename):
     # Empties the content of the sources_collection table in the database.
     conn = sqlite3.connect(DATBASE)
 
     c = conn.cursor()
 
-    command = "DELETE FROM " + TABLENAME + ";"
-
-    c.execute(command)
-
-    print("Table emptied!")
+    command = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + TABLENAME + "';"
+    listOfTables = c.execute(command).fetchall()
 
     conn.commit()
-
     c.close()
+
+    if listOfTables == []:
+        crt.create_sources_table(DATBASE, TABLENAME)
+
+    else:
+        conn = sqlite3.connect(DATBASE)
+
+        c = conn.cursor()
+
+        command = "DROP TABLE " + TABLENAME + ";"
+
+        c.execute(command)
+
+        print(cfg.database_bib_sources_tablename)
+
+        crt.create_sources_table(DATBASE, cfg.database_bib_sources_tablename)
+
+        print("Table emptied!")
+
+        conn.commit()
+        c.close()
 
     return
 
