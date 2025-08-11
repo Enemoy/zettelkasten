@@ -48,6 +48,7 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
     TABLE_CREATION_COMMAND = "CREATE TABLE " + TABLENAME + """ (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 `citekey` text NOT NULL UNIQUE DEFAULT '',
+                `type` text DEFAULT '',
                 `entrytype` text DEFAULT '',
                 `author` text DEFAULT '',
                 `title` text DEFAULT '',
@@ -71,27 +72,24 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
                 `chapter` text DEFAULT '',
                 `school` text DEFAULT '',
                 `issn` text DEFAULT '',
+                `origdate` text DEFAULT '',
                 `shorthand` text DEFAULT '',
-                `type` text DEFAULT '',
                 `eprint` text DEFAULT '',
                 `crossref` text DEFAULT '',
                 `series` text DEFAULT '',
                 `addendum` text DEFAULT '',
                 `organization` text DEFAULT '',
                 `abstract` text DEFAULT '',
-                `path_to_bibfile` text DEFAULT '',
-                `date` text DEFAULT '',
-                `tag_1` text DEFAULT '',
-                `tag_2` text DEFAULT '',
-                `tag_3` text DEFAULT '',
-                `tag_4` text DEFAULT '',
-                `tag_5` text DEFAULT ''
+                `file` text DEFAULT '',
+                `tags` text DEFAULT '',
+                `date` text DEFAULT ''
             )"""
 
-    try:
-        c.execute(TABLE_CREATION_COMMAND)
-    except sqlite3.OperationalError:
-        print("SQL-Error or: Table already exists:", TABLENAME)
+    c.execute(TABLE_CREATION_COMMAND)
+    # try:
+    #     c.execute(TABLE_CREATION_COMMAND)
+    # except sqlite3.OperationalError:
+    #     print("SQL-Error or: Table already exists:", TABLENAME)
 
     return
 
@@ -103,23 +101,20 @@ def create_datapoints_table(PATH_TO_DATABASE, TABLENAME):
 
     TABLE_CREATION_COMMAND = "CREATE TABLE "+  TABLENAME + """(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                citekey text,
-                page text,
-                summary text,
-                path text,
-                tag_1 text,
-                tag_2 text,
-                tag_3 text,
-                tag_4 text,
-                tag_5 text,
-                date text
+                `type` text,
+                `citekey` text,
+                `page` text,
+                `file` text,
+                `note` text DEFAULT '',
+                `content` text DEFAULT ''
             )"""
 
-    try:
-        c.execute(TABLE_CREATION_COMMAND)
+    c.execute(TABLE_CREATION_COMMAND)
+    # try:
+    #     c.execute(TABLE_CREATION_COMMAND)
 
-    except sqlite3.OperationalError:
-        print("Table already exists:", TABLENAME)
+    # except sqlite3.OperationalError:
+    #     print("Table already exists:", TABLENAME, "(or there is some other exception, this is just an educated guess.")
 
     return
 
@@ -142,6 +137,7 @@ def create_citations_table(PATH_TO_DATABASE, TABLENAME):
                 date text
             )"""
 
+    c.execute(TABLE_CREATION_COMMAND)
     try:
         c.execute(TABLE_CREATION_COMMAND)
 
@@ -161,8 +157,8 @@ def main():
     check_database_existence(DB_PATH)
 
     create_sources_table(DB_PATH, cfg.database_bib_sources_tablename)
-    create_datapoints_table(DB_PATH, cfg.database_datapoints_tablename)
-    create_citations_table(DB_PATH, cfg.database_citations_tablename)
+    create_datapoints_table(DB_PATH, cfg.points_tablename)
+    # create_citations_table(DB_PATH, cfg.database_citations_tablename)
 
     create_datapoint_directory(cfg.Str_path_datapoint_directory, "content")
     create_datapoint_directory(cfg.Str_path_citation_directory, "citation")

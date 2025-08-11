@@ -15,7 +15,7 @@ Str_manual_description = "This script can query the different tables in the data
 Str_manual_flag_table = "Which table you want to chose. Default: " + cfg.database_bib_sources_tablename
 Str_manual_flag_output = "Which column to output."
 Str_manual_flag_column = "Which column to query."
-Str_manual_flag_string = "Search term you want to query. If column is \"id\", you can input \"last\" to print the last entry added to the table."
+Str_manual_flag_string = "Search term you want to query. If column is \"id\", you can input \"last\" to print the last entry added to the table. If you put STDIN as  a string, the programm will take the argument from standard input. If there are multiple occurences of STDIN, the programm will loop through the lines of input."
 Str_manual_flag_inklusive = "Search inklusivly."
 
 DB_PATH = zfn.correct_home_path(cfg.database_file)

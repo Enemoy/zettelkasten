@@ -38,8 +38,6 @@ def repopulate(DATBASE, TABLENAME=cfg.database_bib_sources_tablename):
 
         c.execute(command)
 
-        print(cfg.database_bib_sources_tablename)
-
         crt.create_sources_table(DATBASE, cfg.database_bib_sources_tablename)
 
         print("Table emptied!")
@@ -77,8 +75,8 @@ def check_citekey_double(DATBASE, TABLENAME, INPUT_DIC):
     c = conn.cursor()
 
     COMMAND_TITLES = "SELECT title FROM " + TABLENAME + " WHERE citekey = '" + INPUT_DIC["citekey"] + "';"
-    COMMAND_PATHS = "SELECT path_to_bibfile FROM " + TABLENAME + " WHERE citekey = '" + INPUT_DIC["citekey"] + "';"
-    NEW_PATH = INPUT_DIC["path_to_bibfile"]
+    COMMAND_PATHS = "SELECT path FROM " + TABLENAME + " WHERE citekey = '" + INPUT_DIC["citekey"] + "';"
+    NEW_PATH = INPUT_DIC["path"]
     TITLE_LIST = []
     PATH_LIST = ""
     for row in c.execute(COMMAND_TITLES):
@@ -193,7 +191,7 @@ def create_entry_list(BIB_FILE):
         CITEKEY = rest[0]
 
         # Create base for dictonary
-        return_dic = {"entrytype": ENTRYTYPE, "citekey": CITEKEY, "path_to_bibfile": BIB_FILE}
+        return_dic = {"type": ENTRYTYPE, "citekey": CITEKEY, "path_to_bibfile": BIB_FILE}
 
         del rest[0]
         # print(rest[-1])
@@ -202,11 +200,11 @@ def create_entry_list(BIB_FILE):
         #del rest[-1]
 
         # Strip elements of entry data
-        for e in rest:
-            attribute_type = e.split("=")[0]
+        for attribute_line in rest:
+            attribute_type = attribute_line.split("=")[0]
             if attribute_type != "}":
                 attribute_type = attribute_type.strip()
-                attribute_value = e.split("=")[1]
+                attribute_value = attribute_line.split("=", 1)[1]
                 attribute_value = attribute_value.strip()
                 attribute_value = attribute_value.strip("\"")
                 attribute_value = attribute_value.strip("{}")

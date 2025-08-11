@@ -32,16 +32,25 @@ database_datapoints_tablename = "datapoint_collection"
 # Tablename for the collection of all the direct citations you want to save.
 database_citations_tablename = "citation_collection"
 
+# new table name after doom emacs integration
+points_tablename = "points_collection"
+
 # Form for the content entry
 DATAPOINT_FORM_PATH = "~/.bin/zettelkasten/form_datapoint"
 CITATION_FORM_PATH = "~/.bin/zettelkasten/form_citation"
 
 # Terminal you want to use (depending on usage, some commands will be executed with $TERM -e. Here you can choose, which terminal you want to use.
 # Example: POPUP_TERMINAL = "urxvt" (the -e flag will be added automatically)
-POPUP_TERMINAL = "st -c dialogue_dropdown"
+POPUP_TERMINAL = "st -c dropdown_dialog"
 
 # The command for a dropdown menu you want data to be piped to (has to work dmenu-style
-DROPDOWN_MENU = "rofi -theme ~/.config/rofi/theme_wide.rasi -dmenu -i"
+DROPDOWN_MENU = "wofi -w 2 -M fuzzy --dmenu -i -W 1300"
+
+
+# Editor is redefined because it can then be started in Goyo
+# EDITOR = 'nvim -c "Goyo | set linebreak"'
+
+
 
 # Backups
 database_file_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/bib_sources.db"
@@ -50,6 +59,12 @@ Str_path_citation_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Bac
 
 # Path to sourcecode
 Str_path_sourcecode = "~/.bin/zettelkasten/"
+
+# Org-Roam Home
+Org_roam_dir="~/Sync/Dokumente/OrgMode/roam/"
+
+Org_roam_quotes="20250601141917-zitatespeicher.org"
+Org_roam_datapoints="20250601144944-zettelkasten_datenpunkte.org"
 
 
 #############################################################################################

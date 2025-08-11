@@ -4,6 +4,8 @@
 # Last argument has to be the path
 eval `/home/simon/.bin/zettelkasten/main_config.py`
 
+# EDITOR="nvim -c \"Goyo | set linebreaker\""
+
 TMP_FILENAME_1=$(echo $RANDOM | md5sum | head -c 20)
 TMP_FILENAME_2=$(echo $RANDOM | md5sum | head -c 20)
 

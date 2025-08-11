@@ -12,73 +12,74 @@ case $1 in
 	query | search | find)
 		#echo "Query"
 		shift
-		${Str_path_sourcecode}query_database.py  $@
+		${Str_path_sourcecode}query_database_v2.py  "$@"
 		;;
 
 	convert | compile)
 		#echo "bibfile converter"
 		shift
-		${Str_path_sourcecode}bib_file_converter.py  $@
+		# ${Str_path_sourcecode}bib_file_converter.py  "$@"
+		${Str_path_sourcecode}populate_database.py
 		;;
 
-	complete)
-		#echo "compiling main bib-file"
+	bibfile)
+		# echo "compiling main bib-file"
 		shift
-		${Str_path_sourcecode}compile_bib.py  $@
+		${Str_path_sourcecode}create_bibfiles_from_db.py  "$@"
 		;;
 
 	backup)
 		#echo "backup"
 		shift
-		${Str_path_sourcecode}backup_files.py  $@
+		${Str_path_sourcecode}backup_files.py  "$@"
 		;;
 
 	create | setup)
 		#echo "creating database"
 		shift
-		${Str_path_sourcecode}create_database.py  $@
+		${Str_path_sourcecode}create_database.py  "$@"
 		;;
 
 	edit)
 		#echo "Editing entry"
 		shift
-		${Str_path_sourcecode}edit_entry.py  $@
+		${Str_path_sourcecode}edit_entry.py  "$@"
 		;;
 
 	citekey)
 		#echo "looking through citekeys with dmenu"
 		shift
-		${Str_path_sourcecode}dmenu_citekey_search.sh  $@
+		${Str_path_sourcecode}dmenu_citekey_search.sh  "$@"
 		;;
 
 	delete)
 		#echo "deleting rows"
 		shift
-		${Str_path_sourcecode}delete_rows.py  $@
+		${Str_path_sourcecode}delete_rows.py  "$@"
 		;;
 
 	check)
 		#echo "Checking if citekeys exisit"
 		shift
-		${Str_path_sourcecode}check_citekeys_existing.py  $@
+		${Str_path_sourcecode}check_citekeys_existing.py  "$@"
 		;;
 
 	change)
 		#echo "changing all citekeys in a table"
 		shift
-		${Str_path_sourcecode}change_citekeys_all.py  $@
+		${Str_path_sourcecode}change_citekeys_all.py  "$@"
 		;;
 
 	citation)
 		#echo "adding new citation"
 		shift
-		${Str_path_sourcecode}add_new_citation.sh  $@
+		${Str_path_sourcecode}add_new_citation.sh  "$@"
 		;;
 
 	datapoint)
 		#echo "adding new datapoint"
 		shift
-		${Str_path_sourcecode}add_new_datapoint.sh  $@
+		${Str_path_sourcecode}add_new_datapoint.sh  "$@"
 		;;
 
 	config)
@@ -90,8 +91,44 @@ case $1 in
 	bibfile)
 		#echo "Choosing a bibfile"
 		shift
-		${Str_path_sourcecode}dmenu_bibfliles.sh  $@
+		${Str_path_sourcecode}dmenu_bibfliles.sh  "$@"
 		;;
+
+	au)
+		shift
+		${Str_path_sourcecode}query_database_v2.py -c author -s "$@"
+		;;
+
+	ti)
+		shift
+		${Str_path_sourcecode}query_database_v2.py -c title -s "$@"
+		;;
+
+	ci)
+		shift
+		${Str_path_sourcecode}query_database_v2.py -c citekey -s "$@"
+		;;
+
+	ye)
+		shift
+		${Str_path_sourcecode}query_database_v2.py -c citekey -s "$@"
+		;;
+
+	nb)
+		shift
+		${Str_path_sourcecode}query_database_v2.py -c id -s "$@"
+		;;
+
+
+
+
+		# alias zk="sh ~/.bin/zettelkasten/zettelkasten_main.sh "
+		# alias au="query -c author -s "
+		# alias ti="query -c title -s "
+		# alias ci="query -c citekey -s "
+		# alias ye="query -c year -s "
+		# alias nb="query -c id -s " # Number
+
 
 
 	help | -h | --help)
