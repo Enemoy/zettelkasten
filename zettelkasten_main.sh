@@ -124,17 +124,10 @@ case $1 in
 		shift
 		${Str_path_sourcecode}query_database_v2.py -c id -s "$@"
 		;;
-
-
-
-
-		# alias zk="sh ~/.bin/zettelkasten/zettelkasten_main.sh "
-		# alias au="query -c author -s "
-		# alias ti="query -c title -s "
-		# alias ci="query -c citekey -s "
-		# alias ye="query -c year -s "
-		# alias nb="query -c id -s " # Number
-
+	ta | tag)
+		shift
+		${Str_path_sourcecode}query_database_v2.py -c tags -s "$@"
+		;;
 
 
 	help | -h | --help)

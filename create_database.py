@@ -87,11 +87,11 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
                 `date` text DEFAULT ''
             )"""
 
-    c.execute(TABLE_CREATION_COMMAND)
-    # try:
-    #     c.execute(TABLE_CREATION_COMMAND)
-    # except sqlite3.OperationalError:
-    #     print("SQL-Error or: Table already exists:", TABLENAME)
+    # c.execute(TABLE_CREATION_COMMAND)
+    try:
+        c.execute(TABLE_CREATION_COMMAND)
+    except sqlite3.OperationalError:
+        print("SQL-Error or: Table already exists:", TABLENAME)
 
     return
 
@@ -111,12 +111,12 @@ def create_datapoints_table(PATH_TO_DATABASE, TABLENAME):
                 `content` text DEFAULT ''
             )"""
 
-    c.execute(TABLE_CREATION_COMMAND)
-    # try:
-    #     c.execute(TABLE_CREATION_COMMAND)
+    # c.execute(TABLE_CREATION_COMMAND)
+    try:
+        c.execute(TABLE_CREATION_COMMAND)
 
-    # except sqlite3.OperationalError:
-    #     print("Table already exists:", TABLENAME, "(or there is some other exception, this is just an educated guess.")
+    except sqlite3.OperationalError:
+        print("Table already exists:", TABLENAME, "(or there is some other exception, this is just an educated guess.")
 
     return
 

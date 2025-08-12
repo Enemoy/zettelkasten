@@ -10,6 +10,36 @@ import main_config as cfg
 
 # This file provides functions which are used on a regular base for the zettelkasten.
 
+def correct_home_path(INPUT_PATH):
+    # This function takes the INPUT_PATH, changes the "~" to the users home directory and checks if the file exisits.
+    # Todo: Check if input is viable as a path
+    if INPUT_PATH.startswith("~"):
+        OUTPUT_PATH = cfg.HOME + INPUT_PATH[1:]
+    else:
+        OUTPUT_PATH  = INPUT_PATH
+
+    return OUTPUT_PATH
+
+def get_row_count(database=correct_home_path(cfg.database_file)):
+
+    command = "SELECT COUNT (*) FROM " + cfg.points_tablename  + " WHERE type LIKE 'quote';"
+
+
+    result = ""
+    try:
+        conn = sqlite3.connect(database)
+        c = conn.cursor()
+        c.execute(command)
+        result = c.fetchall()
+
+        conn.commit()
+
+    except Exception as e:
+        print(result)
+        print(e)
+
+    return result[0][0]
+
 def convert_to_org_source(input_dic_list):
     # Converts a source dictionary-list to org codeblock formatted string
     # Origin: dictionary comes e.g. pulled from a .bib-file or the database
@@ -121,15 +151,6 @@ def extract_quote_blocks_from_file(path, bool_type):
     return results
 
 
-def correct_home_path(INPUT_PATH):
-    # This function takes the INPUT_PATH, changes the "~" to the users home directory and checks if the file exisits.
-    # Todo: Check if input is viable as a path
-    if INPUT_PATH.startswith("~"):
-        OUTPUT_PATH = cfg.HOME + INPUT_PATH[1:]
-    else:
-        OUTPUT_PATH  = INPUT_PATH
-
-    return OUTPUT_PATH
 
 def check_file_exists(PATH):
     if os.path.isfile(PATH):
@@ -160,8 +181,9 @@ def drop_table(TABLENAME, DATBASE):
         command = "DROP TABLE " + TABLENAME + ";"
 
         c.execute(command)
-    except:
-        print("operational Erororor!")
+    except Exception as e:
+        print("Couldn't drop table!")
+        print(e)
 
     finally:
         conn.commit()
@@ -181,6 +203,9 @@ def key_conversion(key, table):
 
     if key == "path" and table == 1:
         key = "path_to_bibfile"
+
+    if key == "id" and table != 1:
+        key = "p.id"
 
     return key
 
