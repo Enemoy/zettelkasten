@@ -467,7 +467,8 @@ def org_format_source(input_dic):
     # if input_dic["display"] != None:
     #     OUTPUT_STRING += input_dic["display"]
 
-    OUTPUT_STRING += "\"\n"
+    # OUTPUT_STRING += "\"\n"
+    OUTPUT_STRING += "\n"
 
     # Add rest of the key / value pairs
     for key, value in input_dic.items():

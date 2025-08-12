@@ -45,10 +45,12 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
 
     c = conn.cursor()
 
+    # Is display really needed or can note just be used?
     TABLE_CREATION_COMMAND = "CREATE TABLE " + TABLENAME + """ (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 `citekey` text NOT NULL UNIQUE DEFAULT '',
                 `type` text DEFAULT '',
+                `display` text DEFAULT '',
                 `entrytype` text DEFAULT '',
                 `author` text DEFAULT '',
                 `title` text DEFAULT '',
