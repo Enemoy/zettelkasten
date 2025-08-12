@@ -10,6 +10,64 @@ import main_config as cfg
 
 # This file provides functions which are used on a regular base for the zettelkasten.
 
+def convert_to_org_source(input_dic_list):
+    # Converts a source dictionary-list to org codeblock formatted string
+    # Origin: dictionary comes e.g. pulled from a .bib-file or the database
+
+    codeblock = ""
+
+    for e in input_dic_list:
+        codeblock += org_format_source(e)
+        codeblock += "\n"
+
+    return codeblock
+
+def create_entry_list(BIB_FILE):
+    # returns a list with dictonaries.
+    # The dictonaries contain the information about the database entry.
+
+    f = open(BIB_FILE, "r").read()
+
+    content = f.split("@", 1)
+    content = content[1]
+
+    entries = content.split("\n@")
+
+    return_list = []
+
+    for entry in entries:
+        # Extracts the different parts of the entry-data from the string
+        ENTRYTYPE = entry.split("{", 1)[0]
+        rest = entry.split("{", 1)[1]
+
+        rest = rest.split(",\n")
+
+        CITEKEY = rest[0].strip("\n")
+
+        # Create base for dictonary
+        return_dic = {"type": ENTRYTYPE, "citekey": CITEKEY, "path_to_bibfile": BIB_FILE}
+
+        del rest[0]
+        # print(rest[-1])
+        rest[-1] = rest[-1].split("\n")[0]
+        #print(rest[-1])
+        #del rest[-1]
+
+        # Strip elements of entry data
+        for attribute_line in rest:
+            attribute_type = attribute_line.split("=")[0]
+            if attribute_type != "}":
+                attribute_type = attribute_type.strip()
+                attribute_value = attribute_line.split("=", 1)[1]
+                attribute_value = attribute_value.strip()
+                attribute_value = attribute_value.strip("\"")
+                attribute_value = attribute_value.strip("{}")
+
+                return_dic[attribute_type] = attribute_value
+
+        return_list.append(return_dic)
+
+    return return_list
 
 def convert_to_biblatex(input_dic):
     # Converts a dictionary to a biblatex entry.
@@ -394,12 +452,13 @@ def org_format_source(input_dic):
     # This function converts the input dic from a source into an org(-roam) usable codeblock
 
     # blacklist for properties that are not part of the .bib-source entry
-    blacklist_props = ["citekey", "entrytype", "path_to_bibfile", "id"]
+    blacklist_props = ["citekey", "type", "path_to_bibfile", "id"]
 
     OUTPUT_STRING = "#+BEGIN_SRC source :citekey "
     OUTPUT_STRING += input_dic["citekey"]
     OUTPUT_STRING += " :type "
-    OUTPUT_STRING += input_dic["entrytype"]
+    OUTPUT_STRING += input_dic["type"]
+    # OUTPUT_STRING += input_dic["entrytype"]
 
 
     # Add display column?!

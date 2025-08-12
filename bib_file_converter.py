@@ -168,58 +168,12 @@ def convert_to_sql_command(input_dic, database, tablename, column_names_mixed):
     return None
 
 
-def create_entry_list(BIB_FILE):
-    # returns a list with dictonaries.
-    # The dictonaries contain the information about the database entry.
-
-    f = open(BIB_FILE, "r").read()
-
-    content = f.split("@", 1)
-    content = content[1]
-
-    entries = content.split("\n@")
-
-    return_list = []
-
-    for entry in entries:
-        # Extracts the different parts of the entry-data from the string
-        ENTRYTYPE = entry.split("{", 1)[0]
-        rest = entry.split("{", 1)[1]
-
-        rest = rest.split(",\n")
-
-        CITEKEY = rest[0]
-
-        # Create base for dictonary
-        return_dic = {"type": ENTRYTYPE, "citekey": CITEKEY, "path_to_bibfile": BIB_FILE}
-
-        del rest[0]
-        # print(rest[-1])
-        rest[-1] = rest[-1].split("\n")[0]
-        #print(rest[-1])
-        #del rest[-1]
-
-        # Strip elements of entry data
-        for attribute_line in rest:
-            attribute_type = attribute_line.split("=")[0]
-            if attribute_type != "}":
-                attribute_type = attribute_type.strip()
-                attribute_value = attribute_line.split("=", 1)[1]
-                attribute_value = attribute_value.strip()
-                attribute_value = attribute_value.strip("\"")
-                attribute_value = attribute_value.strip("{}")
-
-                return_dic[attribute_type] = attribute_value
-
-        return_list.append(return_dic)
-
-    return return_list
 
 def database_fillup(BIB_FILE, STR_FILENAME_DATABASE, BIB_TABLENAME):
     # Creating list with column names to exclude data that is not assignable to a column
     List_database_columnnames = zfn.get_column_names(BIB_TABLENAME)
 
-    entry_list = create_entry_list(BIB_FILE)
+    entry_list = zfn.create_entry_list(BIB_FILE)
 
     for e in entry_list:
         Str_command_sqlexecute_final = convert_to_sql_command(e, STR_FILENAME_DATABASE, BIB_TABLENAME, List_database_columnnames)

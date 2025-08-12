@@ -15,7 +15,7 @@ case $1 in
 		${Str_path_sourcecode}query_database_v2.py  "$@"
 		;;
 
-	convert | compile)
+	compile)
 		#echo "bibfile converter"
 		shift
 		# ${Str_path_sourcecode}bib_file_converter.py  "$@"
@@ -44,6 +44,12 @@ case $1 in
 		#echo "Editing entry"
 		shift
 		${Str_path_sourcecode}edit_entry.py  "$@"
+		;;
+
+	convert)
+		#echo "Editing entry"
+		shift
+		bash ${Str_path_sourcecode}dmenu_convert_to_org_clip.sh
 		;;
 
 	citekey)
