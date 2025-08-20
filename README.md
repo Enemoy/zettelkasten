@@ -34,6 +34,51 @@ Before presenting the different commands, here are some notions that are used th
 - **"quote"**: A literal citation in a source.
 - **"datapoint"**: In indirect citation in a source.
 
+## Codeblocks
+
+Here are examples of codeblocks that are used inside of org files and will be found by the converter.
+
+Here is an entry for a book:
+```
+#+BEGIN_SRC source :citekey antioedipus1972 :type book
+author = Gilles Deleuze and Félix Guattari
+title = Anti-Ödipus - Kapitalismus und Shizophrenie I
+year = 2021
+publisher = Suhrkamp
+address = Frankfurt
+edition = 17
+origdate = 1972
+tags = postmoderne,klassiker
+#+END_SRC
+```
+
+Here is a direct citation (quote) by Deleuze:
+```
+#+BEGIN_SRC quote :citekey antioedipus1972 :page "39" :note "Unterdrückung, Heil"
+Warum kämpfen die Menschen für ihre Knechtschaft als ginge es um ihr Heil?
+#+END_SRC
+```
+
+
+Here is an indirect quote (datapoint) by Deleuze:
+```
+#+BEGIN_SRC datapoint :citekey antioedipus1972 :page "39" :note "Unterdrückung, Heil"
+In this paragraph, Deleuze goes after the question why people are drawn to ideologies like Fascism that oppress them and meanwhile think they are being freed.
+#+END_SRC
+```
+Here is an entry for an article:
+```
+#+BEGIN_SRC source :citekey disciplinedhaslanger2019 :type article
+author = , Sally Haslanger
+title = Disciplined Bodies and Ideology Critique
+year = 2019
+journal = Glass Bead
+volume = 2
+number = 1
+tags = analytic
+#+END_SRC
+```
+
 ## Workflow
 
 How do you use the program?
