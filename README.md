@@ -33,6 +33,11 @@ Before presenting the different commands, here are some notions that are used th
 - **"source"** means a literal source of something, like a book, scientific article or a chapter in a book
 - **"quote"**: A literal citation in a source.
 - **"datapoint"**: In indirect citation in a source.
+- **"tables"**: There are four callable tables in the database (acutally only two). You can access them when querying the database with the `-t <Number>` option:
+	- **1**: The sources table, where all your books, articles etc. are stored.
+	- **2**: Queries only the datapoints.
+	- **3**: Queries only the quotes.
+	- **4**: Queries datapoints as well as quotes.
 
 ## Codeblocks
 
@@ -91,18 +96,43 @@ How do you use the program?
 6. Use your bibfiles to write LaTeX documents. I personally don't do that in Emacs, but do whatever you like.
 
 This project also contains a lot of helper scripts that allow easier access and conversion of types and files, e.g.:
-- `dmenu`-scripts (or use wofi or whatever, there is a variable for chosing a menu inside the config) to:
+- `dmenu`-scripts (or use wofi or whatever, there is a variable for chosing a menu inside the config) to (these will be documented better in the future):
 	- search citekeys or titles and put them into the clipboard
 	- to convert bibfiles in your Download dir to source entries for this program
 
-----
-## Use Cases
+## Documentation and examples
 
-This repository has different use cases:
-1. Put all your sources, direct and indirect citations in codeblocks in Emacs Org files (I designed the project around org roam).
-2. Collect these sources from you org roam files and put them into the database.
-3. Query the database for e.g. "What sources with Friedrich Nietzsche being the author do I have?" (command: zk query -c author -s "Friedrich Nietzsche")
-4. Convert all your sources from the database into LaTeX Bibtex files based on the tags.
+I am trying to properly document this project and gave every subprogram a help function.
+In the repo, there is the main bash script that triggers these smaller programs and relays their arguments to them.
 
-TODO This manual has to be expanded to fully reveal the full workflow and functionality. This is currently a stub.
+Here are examples for how to use the program:
 
+This command checks for all sources that have "Friedrich Nietzsche" in their author field.
+```
+zk query -c author -s "Friedrich Nietzsche"
+```
+
+This command checks for all quotes or datapoints that have "Friedrich Nietzsche" as their author, based on their related source.
+```
+zk query -c author -s "Friedrich Nietzsche" -t 4
+```
+
+This command checks for all sources that have the publisher "Bloomsbury" and have been released in the year 2025 and outputs only their authors:
+```
+zk query -c publisher -s "Bloomsbury" -c year -s 2025 -o author
+```
+
+This command collects all your sources and citations from the org files and puts them into the database:
+```
+zk compile
+```
+
+This command creates one single Biblatex file (`.bib`) that contains all your sources:
+```
+zk bibfile -m
+```
+
+This command creates one Biblatex file (`.bib`) that contains all sources with the tag "Psychoanalyse" into an output file of the same name:
+```
+zk bibfile -t Psychoanalyse -f Psychoanalyse.bib
+```
