@@ -505,6 +505,30 @@ def org_format_source(input_dic):
 
     return OUTPUT_STRING
 
+def notification_format_citation(input_dic):
+    # Formats the output for a notification of a citation.
+    CITATION = input_dic["content"]
+
+
+    AUTHOR = input_dic["author"]
+    TITLE = input_dic["title"]
+    YEAR = input_dic["year"]
+    ORIGDATE = input_dic["origdate"]
+    PUBLISHER = input_dic["publisher"]
+
+    OUTPUT_STRING = CITATION
+    OUTPUT_STRING += "\n - " + AUTHOR + "\n   "
+    OUTPUT_STRING += TITLE + " ("
+
+    if ORIGDATE == "":
+        OUTPUT_STRING += YEAR
+    else:
+        OUTPUT_STRING += ORIGDATE
+
+    OUTPUT_STRING += ")"
+
+    return OUTPUT_STRING
+
 def pretty_format_citation(input_dic):
     # Formats the output as a pretty citation / datapoint with infos from sources
     CITATION = input_dic["content"]

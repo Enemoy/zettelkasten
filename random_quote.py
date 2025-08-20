@@ -13,7 +13,7 @@ def main():
 
     result = zfn.db_select_query(4, query_dict, query_all_bool = False, database = zfn.correct_home_path(cfg.database_file))
 
-    output_string = zfn.pretty_format_citation(result[0])
+    output_string = zfn.notification_format_citation(result[0])
 
     print(output_string)
 
