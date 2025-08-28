@@ -16,8 +16,8 @@ So why this one, why was it created?
 The purpose of the program is to create an enviroment **around** Doom Emacs and Org Roam (UI), that allows safe storage of sources and citations (direct or indirect) in a seperate system, that is independant of Emacs.
 This means, that notes inside of your org-roam files can be taken, created, deleted, edited and whatever else you do with it.
 All the sources you want to track are stored inside of these org files in the form of codeblocks.
-This program then simply extracts all this data from said codeblocks and transfers them into a seperate database.
-On the one hand, this design has the advantage of still working, even if you Emacs crashes.
+**This program then simply extracts all this data from said codeblocks and transfers them into a seperate database.**
+On the one hand, this design has the advantage of still working, even if your Emacs crashes.
 You basically check in all the new entries you have at regular intervals (cronjob, manual script-triggering, whatever you like).
 
 You can then query the database in the terminal, here's an example:
@@ -136,9 +136,28 @@ This command creates one Biblatex file (`.bib`) that contains all sources with t
 ```
 zk bibfile -t Psychoanalyse -f Psychoanalyse.bib
 ```
-## Snippets
+## Project Structure
+
+There are several directories with code inside this repo.
+
+### Main
+
+Here is the main codebase, e.g. the source code for databse-setup, queries, the main functions of the program, file converters etc.
+
+### Scripts
+
+In this directory are all the scripts that are supposed to ease your access to the database through e.g. dmenu-scripts.
+I use them to access e.g. citekeys out of vim while editing LaTeX or paste bibfiles I download to the clipboard as org-compatible codeblocks.
+The scripts are supposed to fluently use the program with hotkeys from your system (you have to configure those in some way).
+
+### Snippets
 
 Inside the project, there are several snippets to safe you time in writing the codeblocks yourself.
 They can be used to either automatically create source or a citation.
 If you create a citation, the snippet will use a dmenu-script to ask for the citekey.
 This will be useful, if you already have a lot of sources and wish to find their exact citekey, but only know the title of the source.
+
+Also, you can find excerpts from my configs for different programs / enviroments that I use to configure hotkeys that call the scripts in my system.
+
+They are just examples though and depend on the enviroment you use.
+I tried to give them useful descriptions so you can easily implement them to your liking.
