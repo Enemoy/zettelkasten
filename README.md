@@ -136,3 +136,9 @@ This command creates one Biblatex file (`.bib`) that contains all sources with t
 ```
 zk bibfile -t Psychoanalyse -f Psychoanalyse.bib
 ```
+## Snippets
+
+Inside the project, there are several snippets to safe you time in writing the codeblocks yourself.
+They can be used to either automatically create source or a citation.
+If you create a citation, the snippet will use a dmenu-script to ask for the citekey.
+This will be useful, if you already have a lot of sources and wish to find their exact citekey, but only know the title of the source.

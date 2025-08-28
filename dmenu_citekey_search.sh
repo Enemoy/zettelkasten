@@ -8,27 +8,21 @@
 
 eval `/home/simon/.bin/zettelkasten/main_config.py`
 
-# echo $DROPDOWN_MENU
-
 # DROPDOWN_MENU="rofi -theme-str  'window  {width: 50%;}' -w 2 -M fuzzy -dmenu -i"
 DROPDOWN_MENU="rofi -dmenu -case-smart"
 
-# echo -e "Yes\nNo\nMaybe" | $DROPDOWN_MENU
-
-# exit 0
 
 if [[ "${database_file:0:1}" == "~" ]];
 then
 	database_file="$HOME${database_file:1}"
 fi
 
-# This if statement checks, if the input file is a .tex file and tries to find the .bib-file in it in the database.
-if [[ "${3: -4}" == ".tex" ]] && [[ "$2" == "path_to_bibfile" ]];
+# This if statement checks, if the input file is a .tex file and if yes, extracts the bibfile / tag to narrow down the selection.
+# This is the case when calling this script from e.g. vim while editing .tex files.
+if [[ "${3: -4}" == ".tex" ]] && [[ "$2" == "tags" ]];
 then
-	STRING=$(grep \addbibresource $3)
 
-	STRING=${STRING#*\{}
-	STRING=${STRING::-1}
+	STRING=$(grep -P "^\\\addbibresource{" $3 | sed 's/^.*{//' | sed 's/\.bib}//')
 
 	COLUMN=$2
 else
@@ -58,17 +52,8 @@ then
 	else
 		echo $output_citekey | wl-copy -n
 	fi
-	# output_citekey=$(sqlite3 $database_file "select citekey,title from $database_bib_sources_tablename;" | awk -F '|' '{printf "%30s - ", $1; printf "%s\n", $2}' | $DROPDOWN_MENU -p "Choose $PROMPT_FIELD:" | awk "{printf $AWK_FIELD}"  |  xargs) | wl-copy -n
 else
 	sqlite3 $database_file "select citekey,title from $database_bib_sources_tablename where $COLUMN like '%$STRING%';" | awk -F '|' '{printf "%30s - ", $1; printf "%s\n", $2}' | $DROPDOWN_MENU -p "Choose $PROMPT_FIELD:" | awk "{printf $AWK_FIELD}"  | xargs |  wl-copy -n
-	# output_citekey=$(sqlite3 $database_file "select citekey,title from $database_bib_sources_tablename where $COLUMN like '%$STRING%';" | awk -F '|' '{printf "%30s - ", $1; printf "%s\n", $2}' | $DROPDOWN_MENU -p "Choose $PROMPT_FIELD:" | awk "{printf $AWK_FIELD}"  | xargs)
 fi
-
-# if [[ "$1" == "TERM" ]];
-# then
-# 	echo $output_citekey
-# else
-# 	echo $output_citekey | wl-copy -n
-# fi
 
 exit 0
