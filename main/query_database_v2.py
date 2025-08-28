@@ -5,8 +5,11 @@ import string
 import random
 import pyperclip
 import os
-import sys
 import argparse
+import sys
+
+sys.path.insert(0, '/home/simon/.bin/zettelkasten/')
+
 import main_config as cfg
 import zettelkasten_functions as zfn
 

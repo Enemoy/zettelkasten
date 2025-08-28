@@ -7,6 +7,9 @@ import pyperclip
 import os
 import time
 import argparse
+import sys
+
+sys.path.insert(0, '/home/simon/.bin/zettelkasten/')
 import create_database as cbd
 import main_config as cfg
 import zettelkasten_functions as zfn

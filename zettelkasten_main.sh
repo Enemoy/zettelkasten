@@ -12,50 +12,50 @@ case $1 in
 	query | search | find)
 		#echo "Query"
 		shift
-		${Str_path_sourcecode}query_database_v2.py  "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py  "$@"
 		;;
 
 	compile)
 		#echo "bibfile converter"
 		shift
 		# ${Str_path_sourcecode}bib_file_converter.py  "$@"
-		${Str_path_sourcecode}populate_database.py
+		${Str_path_sourcecode}${Str_path_sourcecode_main}populate_database.py
 		;;
 
 	bibfile)
 		# echo "compiling main bib-file"
 		shift
-		${Str_path_sourcecode}create_bibfiles_from_db.py  "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}create_bibfiles_from_db.py  "$@"
 		;;
 
 	backup)
 		#echo "backup"
 		shift
-		${Str_path_sourcecode}backup_files.py  "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}backup_files.py  "$@"
 		;;
 
 	create | setup)
 		#echo "creating database"
 		shift
-		${Str_path_sourcecode}create_database.py  "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}create_database.py  "$@"
 		;;
 
 	edit)
 		#echo "Editing entry"
 		shift
-		${Str_path_sourcecode}edit_entry.py  "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}edit_entry.py  "$@"
 		;;
 
 	convert)
 		#echo "Editing entry"
 		shift
-		bash ${Str_path_sourcecode}dmenu_convert_to_org_clip.sh
+		bash ${Str_path_sourcecode}${Str_path_sourcecode_scripts}dmenu_convert_to_org_clip.sh
 		;;
 
 	citekey)
 		#echo "looking through citekeys with dmenu"
 		shift
-		${Str_path_sourcecode}dmenu_citekey_search.sh  "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_scripts}dmenu_citekey_search.sh  "$@"
 		;;
 
 	delete)
@@ -94,39 +94,39 @@ case $1 in
 		$EDITOR ${Str_path_sourcecode}main_config.py
 		;;
 
-	bibfile)
+	bibchoose)
 		#echo "Choosing a bibfile"
 		shift
-		${Str_path_sourcecode}dmenu_bibfliles.sh  "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_scripts}dmenu_bibfliles.sh  "$@"
 		;;
 
 	au)
 		shift
-		${Str_path_sourcecode}query_database_v2.py -c author -s "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c author -s "$@"
 		;;
 
 	ti)
 		shift
-		${Str_path_sourcecode}query_database_v2.py -c title -s "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c title -s "$@"
 		;;
 
 	ci)
 		shift
-		${Str_path_sourcecode}query_database_v2.py -c citekey -s "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c citekey -s "$@"
 		;;
 
 	ye)
 		shift
-		${Str_path_sourcecode}query_database_v2.py -c citekey -s "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c citekey -s "$@"
 		;;
 
 	nb)
 		shift
-		${Str_path_sourcecode}query_database_v2.py -c id -s "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c id -s "$@"
 		;;
 	ta | tag)
 		shift
-		${Str_path_sourcecode}query_database_v2.py -c tags -s "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c tags -s "$@"
 		;;
 
 

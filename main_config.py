@@ -59,6 +59,9 @@ Str_path_citation_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Bac
 
 # Path to sourcecode
 Str_path_sourcecode = "~/.bin/zettelkasten/"
+Str_path_sourcecode_main="main/"
+Str_path_sourcecode_scripts="scripts/"
+Str_path_sourcecode_snippets="snippets/"
 
 # Org-Roam Home
 Org_roam_dir="~/Sync/Dokumente/OrgMode/roam/"

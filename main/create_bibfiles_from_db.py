@@ -7,9 +7,12 @@ import pyperclip
 import os
 import time
 import argparse
-import create_database as cbd
+import sys
+
+sys.path.insert(0, '/home/simon/.bin/zettelkasten/')
 import main_config as cfg
 import zettelkasten_functions as zfn
+import create_database as cbd
 
 Str_manual_description="This script will create bib-file for each tag found in the database and add the corresponding entries. Alternatively, it will create a bib file with all sources."
 Str_manual_usage="create_bibfile_from_db.py [args]"

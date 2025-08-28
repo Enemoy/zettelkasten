@@ -1,8 +1,13 @@
 #!/usr/bin/python
 
-import main_config as cfg
-import zettelkasten_functions as zfn
 import argparse
+import sys
+
+sys.path.insert(0, '/home/simon/.bin/zettelkasten/')
+import main_config as cfg
+import bib_file_converter
+import zettelkasten_functions as zfn
+import create_database as crt
 
 Str_manual_description="Opens the input file (must be with biblatex content) and converts it to an org source codeblock."
 Str_manual_usage="zettelkasten org_convert [-h/--help]"

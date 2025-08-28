@@ -1,8 +1,11 @@
 #!/usr/bin/python
 
 import random
+import sys
+
+sys.path.insert(0, '/home/simon/.bin/zettelkasten/')
 import main_config as cfg
-import zettelkasten_functions as zfn
+import main.zettelkasten_functions as zfn
 
 def main():
     # Cout all rows with quote, generate random number from that, query quote with id.

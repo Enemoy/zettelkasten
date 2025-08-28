@@ -1,10 +1,13 @@
 #!/usr/bin/python
 
 import sqlite3
-import bib_file_converter
 import os
 import argparse
 import shutil
+import sys
+
+sys.path.insert(0, '/home/simon/.bin/zettelkasten/')
+import bib_file_converter
 import main_config as cfg
 import zettelkasten_functions as zfn
 

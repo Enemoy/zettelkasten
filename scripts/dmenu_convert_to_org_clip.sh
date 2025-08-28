@@ -11,7 +11,7 @@ target_dir="$HOME/Downloads/"
 # text=$(cat $target_dir$(find $target_dir -type f  -printf "%P\n" | $DROPDOWN_MENU))
 text="$target_dir$(find $target_dir -type f  -printf "%P\n" | $DROPDOWN_MENU)"
 
-text=$(python3 ${Str_path_sourcecode}convert_bib_to_org_handler.py $text)
+text=$(python3 ${Str_path_sourcecode}${Str_path_sourcecode_main}convert_bib_to_org_handler.py $text)
 
 notify-send "Target Dir" "$target_dir"
 notify-send "Content" "$text"
