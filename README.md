@@ -7,6 +7,16 @@ I wanted to do the same thing but digitally.
 As I am using LaTeX to write my documents, I wanted a system that allows me to use the bibliography managment of LaTeX, while at the same time allowing me to access all the sources and their properties easy via the commandline.
 Not only do I want to be able to store all my sources, I also want to store information on what I have read and where to find it as well as specific citations I find relevant without having to remember everything.
 
+----
+
+## TODO
+
+The code for this program or better said plugin / extension is still a work in progress.
+Here are some general future plans:
+- better, more straight forward documentation
+- a deploy / setup script that sets up all paths and directories inside the system so that the user has to do as few adjustments as possible
+- upload of snippets
+
 ------
 ## Purpose
 
