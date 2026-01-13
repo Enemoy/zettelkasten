@@ -549,29 +549,24 @@ def pretty_format_citation(input_dic):
     if input_dic["type"] == "quote":
         CITATION = "\"" + CITATION + "\""
 
-    CITATION = textwrap.fill(CITATION, width=60, initial_indent='\t', subsequent_indent='\t')
-
-    # print(textwrap.fill(i, width=100, replace_whitespace=True, drop_whitespace=True, break_on_hyphens=False))
+    citation_split = CITATION.splitlines()
+    CITATION = ""
+    for lst in citation_split:
+        for line in textwrap.wrap(lst, width=60, initial_indent='\t', subsequent_indent='\t'):
+            CITATION += line + "\n"
 
     OUTPUT_STRING = "ID: " + str(input_dic["id"]) + " citekey:  " + input_dic["citekey"]    # Add id and citekey
+
     # Add note
-
-
     if input_dic["note"] != None:
-        # NOTE_TEXT += "\nNote:\t\t " + str(input_dic["note"])
-        NOTE_TEXT = textwrap.fill(str(input_dic["note"]), width=55, initial_indent='Note:\t\t ', subsequent_indent='     \t\t ')
+        NOTE_TEXT = textwrap.wrap(str(input_dic["note"]), width=55, initial_indent='Note:\t\t ', subsequent_indent='     \t\t ')[0]
     else:
         NOTE_TEXT = "\nNote:\t\t -"
-        # NOTE_TEXT = textwrap.fill(str(input_dic["note"], width=60, initial_indent='Note:\t\t ', subsequent_indent='     \t\t ')
-
 
     OUTPUT_STRING += "\n" + NOTE_TEXT
 
-
-
-
     OUTPUT_STRING += "\nSeiten / Stelle: " + input_dic["page"]         # Add pages / location
-    OUTPUT_STRING += "\n" + CITATION + "\n"                         # Add citation itself
+    OUTPUT_STRING += "\n" + CITATION
 
     if AUTHOR == "":
         ADDENDUM =  input_dic["editor"]                               # Add author
@@ -590,9 +585,6 @@ def pretty_format_citation(input_dic):
     ADDENDUM = textwrap.fill(ADDENDUM, width=60, initial_indent='\t- ', subsequent_indent='\t  ')
 
     OUTPUT_STRING += ADDENDUM + "\n"
-
-
-    # OUTPUT_STRING = OUTPUT_STRING[:-2]
 
     return OUTPUT_STRING
 

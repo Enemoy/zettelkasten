@@ -67,6 +67,7 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
                 `journal` text DEFAULT '',
                 `volume` text DEFAULT '',
                 `number` text DEFAULT '',
+                `subtitle` text DEFAULT '',
                 `edition` text DEFAULT '',
                 `isbn` text DEFAULT '',
                 `keywords` text DEFAULT '',

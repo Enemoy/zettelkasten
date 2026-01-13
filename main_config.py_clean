@@ -8,26 +8,13 @@
 import os
 
 # Path to the database-file
-database_file = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/bib_sources.db"
+database_file = "~/.local/zettelkasten/zettelkasten.db"
 
 # The path to your main Bibliography, where all entries are stored. (If you want to cite from all you exisiting entires.
-bibfile_complete = "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/bib_complete.bib"
+bibfile_complete = "~/.local/zettelkasten/sources_full.bib"
 
 # Path where all of your .bib files are stored (default variable, can be specified in a lot of cases)
-Str_path_bibfolder =  "~/Sync/Dokumente/PDFs/Uni/LaTeX/Bibliografien/Bibs/"
-
-# Path to the directory where all the datapoint contents are stored
-Str_path_datapoint_directory = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/datapoint_files/"
-
-# Path to the directory where all the citations are stored
-Str_path_citation_directory = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten/citation_files/"
-
-
-# Tablename for the collection of your sources.
-database_bib_sources_tablename = "sources_collection"
-
-# Tablename for the collection of your datapoints found in the sources.
-database_datapoints_tablename = "datapoint_collection"
+Str_path_bibfolder =  "~/.local/zettelkasten/latex_sources/"
 
 # Tablename for the collection of all the direct citations you want to save.
 database_citations_tablename = "citation_collection"
@@ -35,28 +22,17 @@ database_citations_tablename = "citation_collection"
 # new table name after doom emacs integration
 points_tablename = "points_collection"
 
-# Form for the content entry
-DATAPOINT_FORM_PATH = "~/.bin/zettelkasten/form_datapoint"
-CITATION_FORM_PATH = "~/.bin/zettelkasten/form_citation"
-
 # Terminal you want to use (depending on usage, some commands will be executed with $TERM -e. Here you can choose, which terminal you want to use.
 # Example: POPUP_TERMINAL = "urxvt" (the -e flag will be added automatically)
 POPUP_TERMINAL = "kitty --class dropdown_dialog"
 
 # The command for a dropdown menu you want data to be piped to (has to work dmenu-style
-DROPDOWN_MENU = "wofi --theme ~/.config/wofi/theme.rasi -w 2 -M fuzzy --dmenu -i -W 1300"
-# DROPDOWN_MENU = "wofi --theme ~/.config/wofi/theme.rasi --dmenu"
-
-
-# Editor is redefined because it can then be started in Goyo
-# EDITOR = 'nvim -c "Goyo | set linebreak"'
+DROPDOWN_MENU = "wofi -w 2 -M fuzzy --dmenu -i -W 1300"
 
 
 
 # Backups
-database_file_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/bib_sources.db"
-Str_path_datapoint_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/datapoint_files/"
-Str_path_citation_directory_backup = "~/Sync/Dokumente/PDFs/Uni/Zettelkasten_Backup/citation_files/"
+database_file_backup = "~/.local/zettelkasten/backup/zettelkasten.db"
 
 # Path to sourcecode
 Str_path_sourcecode = "~/.bin/zettelkasten/"
@@ -64,11 +40,12 @@ Str_path_sourcecode_main="main/"
 Str_path_sourcecode_scripts="scripts/"
 Str_path_sourcecode_snippets="snippets/"
 
-# Org-Roam Home
-Org_roam_dir="~/Sync/Dokumente/OrgMode/roam/"
+# The path to your org roam files, should be identical to the 'org-roam-directory' variable in your doom / emacs config.
+Org_roam_dir="~/.local/roam/"
 
-Org_roam_quotes="20250601141917-zitatespeicher.org"
-Org_roam_datapoints="20250601144944-zettelkasten_datenpunkte.org"
+# Generic Testfiles, if you want to have one central file for quotes and datapoints
+Org_roam_quotes=""
+Org_roam_datapoints=""
 
 
 #############################################################################################

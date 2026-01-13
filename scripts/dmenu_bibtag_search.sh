@@ -5,7 +5,7 @@
 
 eval `/home/simon/.bin/zettelkasten/main_config.py`
 
-DROPDOWN_MENU="rofi -dmenu -case-smart"
+# DROPDOWN_MENU="rofi -dmenu -case-smart"
 
 tag=$(sqlite3 $database_file "select tags from $database_bib_sources_tablename;" | tr , "\n" | sed '/^$/d'  | sed 's/^[[:space:]]*//' | sed -e 's/\ *$//g' | sort -f | uniq -i | $DROPDOWN_MENU)
 
