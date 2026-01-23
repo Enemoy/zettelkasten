@@ -561,7 +561,7 @@ def pretty_format_citation(input_dic):
     if input_dic["note"] != None:
         NOTE_TEXT = textwrap.wrap(str(input_dic["note"]), width=55, initial_indent='Note:\t\t ', subsequent_indent='     \t\t ')[0]
     else:
-        NOTE_TEXT = "\nNote:\t\t -"
+        NOTE_TEXT = "Note:\t\t -"
 
     OUTPUT_STRING += "\n" + NOTE_TEXT
 
