@@ -112,7 +112,9 @@ def create_datapoints_table(PATH_TO_DATABASE, TABLENAME):
                 `page` text,
                 `file` text,
                 `note` text DEFAULT '',
-                `content` text DEFAULT ''
+                `content` text DEFAULT '',
+                `cid` integer NOT NULL UNIQUE DEFAULT '',
+                `display` integer DEFAULT 1
             )"""
 
     # c.execute(TABLE_CREATION_COMMAND)

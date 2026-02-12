@@ -19,7 +19,7 @@ case $1 in
 		#echo "bibfile converter"
 		shift
 		# ${Str_path_sourcecode}bib_file_converter.py  "$@"
-		${Str_path_sourcecode}${Str_path_sourcecode_main}populate_database.py
+		${Str_path_sourcecode}${Str_path_sourcecode_main}populate_database.py "$@"
 		;;
 
 	bibfile)
@@ -50,6 +50,13 @@ case $1 in
 		#echo "Editing entry"
 		shift
 		bash ${Str_path_sourcecode}${Str_path_sourcecode_scripts}dmenu_convert_to_org_clip.sh
+		;;
+
+	cid)
+		#echo "Editing entry"
+		shift
+		bash ${Str_path_sourcecode}${Str_path_sourcecode_scripts}new_highest_cid_file.sh main
+
 		;;
 
 	citekey)
@@ -110,14 +117,29 @@ case $1 in
 		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c title -s "$@"
 		;;
 
-	ci)
+	key)
 		shift
 		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c citekey -s "$@"
 		;;
 
-	ye)
+	id)
 		shift
-		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c citekey -s "$@"
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c cid -s "$@"
+		;;
+
+	ye | year)
+		shift
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c year -s "$@"
+		;;
+
+	or | origdate)
+		shift
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c origdate -s "$@"
+		;;
+
+	org | file)
+		shift
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c file -s "$@"
 		;;
 
 	nb)
@@ -127,6 +149,16 @@ case $1 in
 	ta | tag)
 		shift
 		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c tags -s "$@"
+		;;
+
+	pa | page)
+		shift
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c page -s "$@"
+		;;
+
+	no | note)
+		shift
+		${Str_path_sourcecode}${Str_path_sourcecode_main}query_database_v2.py -c note -s "$@"
 		;;
 
 

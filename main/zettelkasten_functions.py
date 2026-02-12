@@ -20,6 +20,38 @@ def correct_home_path(INPUT_PATH):
 
     return OUTPUT_PATH
 
+def extract_list_cid(file=correct_home_path(cfg.last_cid_file)):
+    # This function extracts the highest cid in points collection and puts it into a file.
+    SQL_COMMAND="SELECT MAX(cid) FROM " + cfg.points_tablename + ";"
+    highest_cid = execute_sql_command(SQL_COMMAND)[0][0]
+
+    SQL_COMMAND="SELECT cid FROM " + cfg.points_tablename + ";"
+    free_cid_list = []
+    cid_list = []
+    # cid_list_tupled =
+
+    for e in execute_sql_command(SQL_COMMAND):
+        cid_list.append(int(str(e).strip('(,)')))
+
+    for i in range(223):
+        if i not in cid_list:
+            free_cid_list.append(i)
+
+    free_cid_list.append(highest_cid)
+
+    try:
+        with open(file, "w") as f:
+            f.write(str(highest_cid))
+    except FileNotFoundError:
+        with open(file, "x") as f:
+            f.write(str(highest_cid))
+
+
+    return free_cid_list
+
+
+
+
 def get_row_count(database=correct_home_path(cfg.database_file)):
 
     command = "SELECT COUNT (*) FROM " + cfg.points_tablename  + " WHERE type LIKE 'quote';"
@@ -134,13 +166,35 @@ def extract_quote_blocks_from_file(path, bool_type):
     # pattern = re.compile(r'^\#\+BEGIN_SRC\s+quote\s*(.*?)\n(.*?)^\#\+END_SRC', re.MULTILINE | re.DOTALL)
 
     results = []
+    warnings = []
     for match in pattern.findall(content):
         raw_params, body = match
-        # params = dict(re.findall(r':(\w+)\s+"?([^"\s]+)"?', raw_params))
+        # print(raw_params)
+        if bool_type == "source":
+            # params = dict(re.findall(r':(\w+)\s+"?([^"\s]+)"?', raw_params))
+            params = re.findall(r':(\w+)\s+(?:"([^"]+)"|(\S+))', raw_params)
+            attributes = {key: val1 if val1 else val2 for key, val1, val2 in params}
 
-        params = re.findall(r':(\w+)\s+(?:"([^"]+)"|(\S+))', raw_params)
+        else:
+            # Search for the pattern in the input string
+            citekey = re.search(r":citekey(.*?):", raw_params).group(1).strip()
+            page = re.search(r":page(.*?):", raw_params).group(1).strip('" ')
+            cid = re.search(r":cid(.*?):", raw_params).group(1).strip()
+            display = re.search(r":display(.*?)$", raw_params).group(1).strip()
 
-        attributes = {key: val1 if val1 else val2 for key, val1, val2 in params}
+            try:
+                note = re.search(r":note(.*?):", raw_params).group(1).strip('" ')
+
+            except AttributeError:
+                note = ""
+                warning = "WARN: entry " + cid + " in " + path + " has no note!"
+                warnings.append(warning)
+
+
+            # print(path, citekey, page, cid, display, textwrap.shorten(note, width=12))
+
+
+            attributes = {"citekey": citekey, "page": page, "note": note, "cid": cid, "display": display}
 
         results.append({
             'file': str(path),
@@ -148,7 +202,7 @@ def extract_quote_blocks_from_file(path, bool_type):
             'content': body.strip()
         })
 
-    return results
+    return results, warnings
 
 
 
@@ -205,7 +259,7 @@ def key_conversion(key, table):
         key = "path_to_bibfile"
 
     if key == "id" and table != 1:
-        key = "p.id"
+        key = "s.id"
 
     return key
 
@@ -261,7 +315,12 @@ def db_select_query(table, query_dict, query_all_bool = False, database = correc
             # print(key)
             # print(value)
 
-            where_list.append(key + " LIKE '%" + value + "%' AND")
+            # Change to integer lookup in certain cases
+            integer_list = ["cid", "s.id", "p.id"]
+            if key in integer_list:
+                where_list.append(key + " LIKE " + value + " AND")
+            else:
+                where_list.append(key + " LIKE '%" + value + "%' AND")
 
         # Construct SQL where conditions
         for i in where_list:
@@ -342,6 +401,7 @@ def execute_sql_command(input_command, database = correct_home_path(cfg.database
         conn = sqlite3.connect(database)
         c = conn.cursor()
         c.execute(input_command)
+        result = c.fetchall()
         conn.commit()
 
     except sqlite3.OperationalError as e:
@@ -350,7 +410,7 @@ def execute_sql_command(input_command, database = correct_home_path(cfg.database
         # print("Input command: ")
         # print(input_command)
 
-    return
+    return result
 
 def delete_row(ID, TABLENAME, database = correct_home_path(cfg.database_file)):
     # Deletes the row with the given id
@@ -555,10 +615,10 @@ def pretty_format_citation(input_dic):
         for line in textwrap.wrap(lst, width=60, initial_indent='\t', subsequent_indent='\t'):
             CITATION += line + "\n"
 
-    OUTPUT_STRING = "ID: " + str(input_dic["id"]) + " citekey:  " + input_dic["citekey"]    # Add id and citekey
+    OUTPUT_STRING = "ID: " + str(input_dic["cid"]) + " citekey:  " + input_dic["citekey"]    # Add id and citekey
 
     # Add note
-    if input_dic["note"] != None:
+    if input_dic["note"] != [] and input_dic["note"] != None and input_dic["note"] != "":
         NOTE_TEXT = textwrap.wrap(str(input_dic["note"]), width=55, initial_indent='Note:\t\t ', subsequent_indent='     \t\t ')[0]
     else:
         NOTE_TEXT = "Note:\t\t -"
@@ -582,7 +642,7 @@ def pretty_format_citation(input_dic):
     ADDENDUM += YEAR + " "                                  # Add publishing year
     ADDENDUM += PUBLISHER + ")"                                    # Add publisher
 
-    ADDENDUM = textwrap.fill(ADDENDUM, width=60, initial_indent='\t- ', subsequent_indent='\t  ')
+    ADDENDUM = textwrap.fill(ADDENDUM, width=55, initial_indent='\t- ', subsequent_indent='\t  ')
 
     OUTPUT_STRING += ADDENDUM + "\n"
 

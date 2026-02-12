@@ -12,3 +12,4 @@ test_dataset.py
 setup_and_populate.sh
 tags
 __pycache__
+main_config.py

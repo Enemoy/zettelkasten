@@ -9,7 +9,7 @@
 eval `/home/simon/.bin/zettelkasten/main_config.py`
 
 # DROPDOWN_MENU="rofi -theme-str  'window  {width: 50%;}' -w 2 -M fuzzy -dmenu -i"
-DROPDOWN_MENU="rofi -dmenu -case-smart"
+# DROPDOWN_MENU="rofi -dmenu -case-smart"
 
 
 if [[ "${database_file:0:1}" == "~" ]];

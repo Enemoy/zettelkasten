@@ -40,6 +40,8 @@ def query_database(column_list, search_list, output, table = 1):
 
     results = zfn.db_select_query(table, query_dict, query_all_bool)
 
+    table=int(table)
+
     for i in results:
         if output == "pretty":
             # print(zfn.pretty_format_citation(i))

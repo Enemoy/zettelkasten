@@ -24,6 +24,7 @@ import zettelkasten_functions as zfn
 Str_manual_description="This script will scan the org files and add all quotes and datapoints to the corresponding tables."
 Str_manual_usage="add_new_datapoint.py [args]"
 Str_manual_flag_file="Choose this option if the content of the information is stored in a textfile."
+Str_manual_flag_quiet="Don't print warnings and counts."
 Str_manual_flag_clipboard="Use this option if the content part of the information is stored in the clipboard."
 Str_manual_flag_preexisting="This option is used when the whole information set is already stored in a preexisting, properly formatted file."
 Str_manual_flag_dryrun="Will only print the SQL-command that will be constructed, without running it on the database."
@@ -35,6 +36,7 @@ Str_path_databasefile=cfg.database_file
 
 def org_citation_extractor(org_filelist, entry_type):
 
+    warning_list = []
     return_list = []
 
     for file in org_filelist:
@@ -44,9 +46,7 @@ def org_citation_extractor(org_filelist, entry_type):
         if not file.endswith(".org"):
             continue
 
-        tmp_list = zfn.extract_quote_blocks_from_file(path_to_org, entry_type)
-
-        # return_list.extend(tmp_list)
+        tmp_list, tmp_warnings = zfn.extract_quote_blocks_from_file(path_to_org, entry_type)
 
         for i in tmp_list:
 
@@ -55,8 +55,11 @@ def org_citation_extractor(org_filelist, entry_type):
             else:
                 return_list.append(format_citation(i, entry_type))
 
+        for i in tmp_warnings:
+            warning_list.append(i)
 
-    return return_list
+
+    return return_list, warning_list
 
 def format_source(i, entry_type):
 
@@ -93,11 +96,17 @@ def format_source(i, entry_type):
 def format_citation(i, entry_type):
     tmp_dict = {}
 
+    # print(i)
+
+    # quit()
+
     try:
         tmp_dict["content"] = i["content"]
         tmp_dict["file"] = i["file"]
         tmp_dict["citekey"] = i["params"]["citekey"]
         tmp_dict["page"] = i["params"]["page"]
+        tmp_dict["cid"] = i["params"]["cid"]
+        tmp_dict["display"] = i["params"]["display"]
         tmp_dict["type"] = entry_type
 
     except KeyError as e:
@@ -125,15 +134,17 @@ def sql_constructor(input_dic):
         sql_page    = input_dic["page"]
         sql_file    = input_dic["file"]
         sql_content = input_dic["content"]
+        sql_cid     = input_dic["cid"]
+        sql_display = input_dic["display"]
 
         try:
             sql_note = input_dic["note"]
         except KeyError:
             sql_note = None
 
-        sql_command = "INSERT INTO " + cfg.points_tablename + "(type,citekey,page,file,note,content) VALUES(?,?,?,?,?,?)"
+        sql_command = "INSERT INTO " + cfg.points_tablename + "(type,citekey,page,file,note,content,cid,display) VALUES(?,?,?,?,?,?,?,?)"
 
-        value_tuple = (point_type, sql_citekey, sql_page, sql_file, sql_note, sql_content)
+        value_tuple = (point_type, sql_citekey, sql_page, sql_file, sql_note, sql_content, sql_cid, sql_display)
 
         zfn.db_insert_point(sql_command, value_tuple)
         # zfn.db_insert_point(sql_command, point_type, sql_citekey, sql_page, sql_file, sql_note, sql_content)
@@ -177,6 +188,7 @@ def main():
     parser.add_argument("-c", "--clipboard", action="store_true", help=Str_manual_flag_clipboard)
     parser.add_argument("-p", "--preexisting", type=str, help=Str_manual_flag_preexisting)
     parser.add_argument("-d", "--dryrun", action="store_true", help=Str_manual_flag_dryrun)
+    parser.add_argument("-q", "--quiet", action="store_false", help=Str_manual_flag_quiet)
     args = parser.parse_args()
 
     # First, empty out database
@@ -196,15 +208,20 @@ def main():
     f = list(set(f))
 
     entry_list = []
+    warning_list = []
 
-    entry_list.extend(org_citation_extractor(f, "quote"))
+    types = ["quote", "datapoint", "source" ]
 
-    entry_list.extend(org_citation_extractor(f, "datapoint"))
+    for t in types:
+        tmp_entries, tmp_warnings = org_citation_extractor(f, t)
+        entry_list.extend(tmp_entries)
+        warning_list.extend(tmp_warnings)
 
-    entry_list.extend(org_citation_extractor(f, "source"))
+    # entry_list.extend(org_citation_extractor(f, "quote"))
 
-    # for i in entry_list:
-    #     print(i)
+    # entry_list.extend(org_citation_extractor(f, "datapoint"))
+
+    # entry_list.extend(org_citation_extractor(f, "source"))
 
     sql_list = []
 
@@ -215,7 +232,22 @@ def main():
             sql_list.append(sql_constructor(i))
             counter += 1
 
-    # print(counter)
+
+    cid_list = zfn.extract_list_cid()
+    highest_cid = cid_list.pop(-1)
+    cid_list.pop(0)
+
+    if args.quiet:
+        for w in warning_list:
+            print(w)
+
+        output_string = "Highest cid: " + str(highest_cid) + "\nFree cids are: "
+
+        for i in cid_list:
+            output_string += str(i) + ", "
+
+        print(output_string.strip(', '))
+
 
 
 
