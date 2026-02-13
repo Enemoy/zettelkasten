@@ -53,6 +53,7 @@ def create_sources_table(PATH_TO_DATABASE, TABLENAME):
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 `citekey` text NOT NULL UNIQUE DEFAULT '',
                 `type` text DEFAULT '',
+                `sid` integer NOT NULL UNIQUE DEFAULT '',
                 `display` text DEFAULT '',
                 `entrytype` text DEFAULT '',
                 `author` text DEFAULT '',
@@ -111,7 +112,7 @@ def create_datapoints_table(PATH_TO_DATABASE, TABLENAME):
                 `citekey` text,
                 `page` text,
                 `file` text,
-                `note` text DEFAULT '',
+                `info` text DEFAULT '',
                 `content` text DEFAULT '',
                 `cid` integer NOT NULL UNIQUE DEFAULT '',
                 `display` integer DEFAULT 1

@@ -28,11 +28,8 @@ Str_manual_flag_quiet="Don't print warnings and counts."
 Str_manual_flag_clipboard="Use this option if the content part of the information is stored in the clipboard."
 Str_manual_flag_preexisting="This option is used when the whole information set is already stored in a preexisting, properly formatted file."
 Str_manual_flag_dryrun="Will only print the SQL-command that will be constructed, without running it on the database."
+Str_manual_flag_update="If set, database will not be updated but fully repopulated. [Under construction]"
 Str_path_databasefile=cfg.database_file
-
-# def org_sources_extractor(org_filelist, entry_type):
-
-#     return 0
 
 def org_citation_extractor(org_filelist, entry_type):
 
@@ -65,40 +62,24 @@ def format_source(i, entry_type):
 
     tmp_dict = {}
 
-    # time.sleep(1)
-
-    # tmp_dict["content"] = i["content"]
-    # tmp_dict["file"] = i["file"]
-    # tmp_dict["citekey"] = i["params"]["citekey"]
-    # tmp_dict["page"] = i["params"]["page"]
-    # tmp_dict["type"] = entry_type
-
     tmp_dict["file"] = i["file"]
     tmp_dict["citekey"] = i["params"]["citekey"]
     tmp_dict["type"] = i["params"]["type"]
-
-    # print(i["params"]["type"])
+    tmp_dict["sid"] = i["params"]["sid"]
+    tmp_dict["display"] = i["params"]["display"]
 
     for line in i["content"].strip().split('\n'):
         if '=' in line:
             key, value = line.split('=', 1)
             key = key.strip()
             value = value.strip()
-            # print(key, ":", value)
             tmp_dict[key] = value
-
-    # print(tmp_dict)
-    # print("\n\n")
 
     return tmp_dict
 
 
 def format_citation(i, entry_type):
     tmp_dict = {}
-
-    # print(i)
-
-    # quit()
 
     try:
         tmp_dict["content"] = i["content"]
@@ -113,7 +94,7 @@ def format_citation(i, entry_type):
         print("There was a parameter missing, skipping entry!")
 
     try:
-        tmp_dict["note"] = i["params"]["note"]
+        tmp_dict["info"] = i["params"]["info"]
     except KeyError as e:
         debug = 0
         if debug == 1:
@@ -122,64 +103,40 @@ def format_citation(i, entry_type):
     return tmp_dict
 
 def sql_constructor(input_dic):
-
-    # if input_dic["type"] == "quote" or input_dic["type"] == "datapoint":
-    #     print("Liebe")
-
-    # return 0
+    tablename = cfg.database_bib_sources_tablename
+    sid_or_cid = "sid"
 
     if input_dic["type"] == "quote" or input_dic["type"] == "datapoint":
-        point_type  = input_dic['type']
-        sql_citekey = input_dic["citekey"]
-        sql_page    = input_dic["page"]
-        sql_file    = input_dic["file"]
-        sql_content = input_dic["content"]
-        sql_cid     = input_dic["cid"]
-        sql_display = input_dic["display"]
+        tablename = cfg.points_tablename
+        sid_or_cid = "cid"
 
-        try:
-            sql_note = input_dic["note"]
-        except KeyError:
-            sql_note = None
+    sql_command_types = "INSERT INTO " + tablename + "("
+    sql_command_values = "VALUES("
+    update_command = " ON CONFLICT(" + sid_or_cid + ") DO UPDATE SET "
+    # addendum_command =
 
-        sql_command = "INSERT INTO " + cfg.points_tablename + "(type,citekey,page,file,note,content,cid,display) VALUES(?,?,?,?,?,?,?,?)"
+    value_tuple = ()
+    update_tuple = ()
 
-        value_tuple = (point_type, sql_citekey, sql_page, sql_file, sql_note, sql_content, sql_cid, sql_display)
+    for key, value in input_dic.items():
+        sql_command_types += key + ","
+        sql_command_values += "?,"
+        value_tuple = value_tuple + (value,)
 
-        zfn.db_insert_point(sql_command, value_tuple)
-        # zfn.db_insert_point(sql_command, point_type, sql_citekey, sql_page, sql_file, sql_note, sql_content)
-        # input_command, (point_type, citekey, page, file, note, content))
+        if key != sid_or_cid:
+            update_command += key + "=?, "
+            update_tuple = update_tuple + (value,)
 
-    else:
-        sql_command_types = "INSERT INTO " + cfg.database_bib_sources_tablename + "("
-        sql_command_values = "VALUES("
+    sql_command = sql_command_types[:-1] + ") " + sql_command_values[:-1] + ") " + update_command[:-2] + ";"
 
-        value_tuple = ()
+    value_tuple = value_tuple + update_tuple
 
-        for key, value in input_dic.items():
-            sql_command_types += key + ","
-            sql_command_values += "?,"
-            value_tuple = value_tuple + (value,)
+    # print(value_tuple)
+    # print(sql_command)
 
-        sql_command_types = sql_command_types[:-1] + ") "
-        sql_command_values = sql_command_values[:-1] + ");"
+    zfn.db_insert_point(sql_command, value_tuple)
 
-        sql_command = sql_command_types + sql_command_values
-
-        # print(sql_command)
-        # print(value_tuple)
-
-        zfn.db_insert_point(sql_command, value_tuple)
-
-        return input_dic
-
-
-# def db_injector(sql_list):
-#     for i in sql_list:
-#         print(i)
-#         time.sleep(1)
-
-#     return
+    return input_dic
 
 
 def main():
@@ -189,13 +146,18 @@ def main():
     parser.add_argument("-p", "--preexisting", type=str, help=Str_manual_flag_preexisting)
     parser.add_argument("-d", "--dryrun", action="store_true", help=Str_manual_flag_dryrun)
     parser.add_argument("-q", "--quiet", action="store_false", help=Str_manual_flag_quiet)
+    parser.add_argument("-u", "--update", action="store_false", help=Str_manual_flag_update)
     args = parser.parse_args()
 
-    # First, empty out database
-    zfn.drop_table(zfn.correct_home_path(cfg.points_tablename), zfn.correct_home_path(cfg.database_file))
-    zfn.drop_table(zfn.correct_home_path(cfg.database_bib_sources_tablename), zfn.correct_home_path(cfg.database_file))
-    cbd.create_datapoints_table(zfn.correct_home_path(cfg.database_file), zfn.correct_home_path(cfg.points_tablename))
-    cbd.create_sources_table(zfn.correct_home_path(cfg.database_file), zfn.correct_home_path(cfg.database_bib_sources_tablename))
+    if not args.update:
+        # First, empty out database
+        print("Repopulating, not updating!")
+        zfn.drop_table(zfn.correct_home_path(cfg.points_tablename), zfn.correct_home_path(cfg.database_file))
+        zfn.drop_table(zfn.correct_home_path(cfg.database_bib_sources_tablename), zfn.correct_home_path(cfg.database_file))
+        cbd.create_datapoints_table(zfn.correct_home_path(cfg.database_file), zfn.correct_home_path(cfg.points_tablename))
+        cbd.create_sources_table(zfn.correct_home_path(cfg.database_file), zfn.correct_home_path(cfg.database_bib_sources_tablename))
+    else:
+        print("Updating, not repopulating!")
 
     org_roam_path = cfg.HOME + cfg.Org_roam_dir[1:]
 
@@ -217,12 +179,6 @@ def main():
         entry_list.extend(tmp_entries)
         warning_list.extend(tmp_warnings)
 
-    # entry_list.extend(org_citation_extractor(f, "quote"))
-
-    # entry_list.extend(org_citation_extractor(f, "datapoint"))
-
-    # entry_list.extend(org_citation_extractor(f, "source"))
-
     sql_list = []
 
     counter = 0
@@ -237,6 +193,10 @@ def main():
     highest_cid = cid_list.pop(-1)
     cid_list.pop(0)
 
+    sid_list = zfn.extract_list_cid(table=cfg.database_bib_sources_tablename)
+    highest_sid = sid_list.pop(-1)
+    sid_list.pop(0)
+
     if args.quiet:
         for w in warning_list:
             print(w)
@@ -244,6 +204,11 @@ def main():
         output_string = "Highest cid: " + str(highest_cid) + "\nFree cids are: "
 
         for i in cid_list:
+            output_string += str(i) + ", "
+
+        output_string = output_string.strip(', ') + "\nHighest sid: " + str(highest_sid) + "\nFree sids are: "
+
+        for i in sid_list:
             output_string += str(i) + ", "
 
         print(output_string.strip(', '))

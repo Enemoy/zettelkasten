@@ -20,12 +20,18 @@ def correct_home_path(INPUT_PATH):
 
     return OUTPUT_PATH
 
-def extract_list_cid(file=correct_home_path(cfg.last_cid_file)):
+def extract_list_cid(table=cfg.points_tablename, file=correct_home_path(cfg.last_cid_file)):
     # This function extracts the highest cid in points collection and puts it into a file.
-    SQL_COMMAND="SELECT MAX(cid) FROM " + cfg.points_tablename + ";"
+    sid_or_cid = "cid"
+
+    if table != cfg.points_tablename:
+        sid_or_cid = "sid"
+        file=correct_home_path(cfg.last_sid_file)
+
+    SQL_COMMAND="SELECT MAX(" + sid_or_cid + ") FROM " + table + ";"
     highest_cid = execute_sql_command(SQL_COMMAND)[0][0]
 
-    SQL_COMMAND="SELECT cid FROM " + cfg.points_tablename + ";"
+    SQL_COMMAND="SELECT " + sid_or_cid + " FROM " + table + ";"
     free_cid_list = []
     cid_list = []
     # cid_list_tupled =
@@ -171,9 +177,25 @@ def extract_quote_blocks_from_file(path, bool_type):
         raw_params, body = match
         # print(raw_params)
         if bool_type == "source":
-            # params = dict(re.findall(r':(\w+)\s+"?([^"\s]+)"?', raw_params))
-            params = re.findall(r':(\w+)\s+(?:"([^"]+)"|(\S+))', raw_params)
-            attributes = {key: val1 if val1 else val2 for key, val1, val2 in params}
+            # # params = dict(re.findall(r':(\w+)\s+"?([^"\s]+)"?', raw_params))
+            # params = re.findall(r':(\w+)\s+(?:"([^"]+)"|(\S+))', raw_params)
+            # attributes = {key: val1 if val1 else val2 for key, val1, val2 in params}
+            # Search for the pattern in the input string
+            citekey = re.search(r":citekey(.*?):", raw_params).group(1).strip()
+            entry_type = re.search(r":type(.*?):", raw_params).group(1).strip('" ')
+            sid = re.search(r":sid(.*?):", raw_params).group(1).strip()
+            display = re.search(r":display(.*?)$", raw_params).group(1).strip()
+
+            # try:
+            #     info = re.search(r":info(.*?):", raw_params).group(1).strip('" ')
+
+            # except AttributeError:
+            #     info = ""
+            #     warning = "WARN: entry " + cid + "\t\tin " + re.sub(correct_home_path(cfg.Org_roam_dir), "", path) + " has no info!"
+            #     warnings.append(warning)
+
+
+            attributes = {"citekey": citekey, "type": entry_type, "sid": sid, "display": display}
 
         else:
             # Search for the pattern in the input string
@@ -183,18 +205,15 @@ def extract_quote_blocks_from_file(path, bool_type):
             display = re.search(r":display(.*?)$", raw_params).group(1).strip()
 
             try:
-                note = re.search(r":note(.*?):", raw_params).group(1).strip('" ')
+                info = re.search(r":info(.*?):", raw_params).group(1).strip('" ')
 
             except AttributeError:
-                note = ""
-                warning = "WARN: entry " + cid + " in " + path + " has no note!"
+                info = ""
+                warning = "WARN: entry " + cid + "\t\tin " + re.sub(correct_home_path(cfg.Org_roam_dir), "", path) + " has no info!"
                 warnings.append(warning)
 
 
-            # print(path, citekey, page, cid, display, textwrap.shorten(note, width=12))
-
-
-            attributes = {"citekey": citekey, "page": page, "note": note, "cid": cid, "display": display}
+            attributes = {"citekey": citekey, "page": page, "info": info, "cid": cid, "display": display}
 
         results.append({
             'file': str(path),
@@ -251,15 +270,19 @@ def key_conversion(key, table):
         key = "s.citekey"
 
     if key == "note" and table != 1:
-        key = "p.note"
+        # key = "p.note"
+        key = "note"
     # else:
     #     key = "s.note"
 
     if key == "path" and table == 1:
         key = "path_to_bibfile"
 
-    if key == "id" and table != 1:
-        key = "s.id"
+    if key == "cid" or key == "id" or key == "sid":
+        if table == 1:
+            key = "sid"
+        else:
+            key = "cid"
 
     return key
 
@@ -290,6 +313,12 @@ def db_select_query(table, query_dict, query_all_bool = False, database = correc
     return_list = []
     where_list = []
 
+    if table == "citation":
+        table = 3
+    if table == "datapoint":
+        table = 2
+    if table == "source":
+        table = 1
     table = int(table)
 
     # print(query_all_bool)
@@ -316,11 +345,11 @@ def db_select_query(table, query_dict, query_all_bool = False, database = correc
             # print(value)
 
             # Change to integer lookup in certain cases
-            integer_list = ["cid", "s.id", "p.id"]
+            integer_list = ["sid", "cid", "s.id", "p.id"]
             if key in integer_list:
-                where_list.append(key + " LIKE " + value + " AND")
+                where_list.append(key + " LIKE " + str(value) + " AND")
             else:
-                where_list.append(key + " LIKE '%" + value + "%' AND")
+                where_list.append(key + " LIKE '%" + str(value) + "%' AND")
 
         # Construct SQL where conditions
         for i in where_list:
@@ -485,6 +514,8 @@ def pretty_format_source(input_dic):
 
     OUTPUT_STRING = " - " + AUTHOR                               # Add author
     OUTPUT_STRING += ", " + TITLE                                       # Add title
+    if input_dic["subtitle"] != "":
+        OUTPUT_STRING += " " + input_dic["subtitle"]
     OUTPUT_STRING += " ("
 
     # Only add Origdate if it exists
@@ -498,7 +529,7 @@ def pretty_format_source(input_dic):
     else:
         OUTPUT_STRING += " " + PUBLISHER + ")"                                    # Add publisher
 
-    OUTPUT_STRING += "\nID: " + str(input_dic["id"]) + " citekey: " + input_dic["citekey"]    # Add id and citekey
+    OUTPUT_STRING += "\nID: " + str(input_dic["sid"]) + " citekey: " + input_dic["citekey"]    # Add id and citekey
     # Add note
     if input_dic["note"] != None:
         OUTPUT_STRING += "\nNote: " + str(input_dic["note"])
@@ -520,9 +551,9 @@ def org_format_citation(input_dic):
     OUTPUT_STRING += input_dic["citekey"]
     OUTPUT_STRING += " :page "
     OUTPUT_STRING += input_dic["type"]
-    OUTPUT_STRING += " :note \""
-    if input_dic["note"] != None:
-        OUTPUT_STRING += input_dic["note"]
+    OUTPUT_STRING += " :info \""
+    if input_dic["info"] != None:
+        OUTPUT_STRING += input_dic["info"]
     OUTPUT_STRING += "\"\n"
 
     OUTPUT_STRING += input_dic["content"]
@@ -617,11 +648,11 @@ def pretty_format_citation(input_dic):
 
     OUTPUT_STRING = "ID: " + str(input_dic["cid"]) + " citekey:  " + input_dic["citekey"]    # Add id and citekey
 
-    # Add note
-    if input_dic["note"] != [] and input_dic["note"] != None and input_dic["note"] != "":
-        NOTE_TEXT = textwrap.wrap(str(input_dic["note"]), width=55, initial_indent='Note:\t\t ', subsequent_indent='     \t\t ')[0]
+    # Add info
+    if input_dic["info"] != [] and input_dic["info"] != None and input_dic["info"] != "":
+        NOTE_TEXT = textwrap.wrap(str(input_dic["info"]), width=55, initial_indent='Info:\t\t ', subsequent_indent='     \t\t ')[0]
     else:
-        NOTE_TEXT = "Note:\t\t -"
+        NOTE_TEXT = "Info:\t\t -"
 
     OUTPUT_STRING += "\n" + NOTE_TEXT
 
@@ -633,6 +664,8 @@ def pretty_format_citation(input_dic):
     else:
         ADDENDUM =  AUTHOR                               # Add author
     ADDENDUM += ", " + TITLE                                       # Add title
+    if input_dic["subtitle"] != "":
+        ADDENDUM += ", " + input_dic["subtitle"]
     ADDENDUM += " ("
 
     # Only add Origdate if it exists
