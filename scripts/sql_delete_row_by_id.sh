@@ -5,4 +5,16 @@
 
 eval `/home/simon/.bin/zettelkasten/main_config.py`
 
-echo "Deleting entry, careful!"; read -p "Please enter the cid / sid: " id; read -p "Please enter the table: " table_id; if [[ $table == 1 ]]; then table="sources_collection"; sid_or_cid="sid"; else table="points_collection"; sid_or_cid="cid"; fi; sqlite3 $database_file "DELETE FROM $table WHERE $sid_or_cid = $id;"
+echo "Deleting entry, careful!"
+read -p "Please enter the cid / sid: " id
+read -p "Please enter the table: " table_id
+if [[ $table == 1 ]]
+then table="sources_collection"
+	sid_or_cid="sid"
+else table="points_collection"
+	sid_or_cid="cid"
+fi
+
+sqlite3 $database_file "DELETE FROM $table WHERE $sid_or_cid = $id;"
+
+exit 0
