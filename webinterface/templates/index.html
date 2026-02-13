@@ -1,0 +1,18 @@
+{% from 'macros.html' import
+	search_bar
+%}
+<!DOCTYPE html>
+<!DOCTYPE html>
+<!-- This is the root page where nothing has been queried yet. -->
+<html>
+<head>
+<!-- <link rel="stylesheet" href="style.css"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>zk Webinterface</h1>
+<h1>Search</h1>
+{{ search_bar(query, querytype, options, table_list) }}
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!-- Searchbar with options -->
+{% macro search_bar(query, querytype, options, table_list) %}
+	<form action="/search" method="POST">
+		<input type="text" name="query" placeholder="{{ query }}" {% if query != "Enter search term!" %} value="{{ query }}"{% endif %}>
+		<select name="querytype" id="querytype">
+		<option value="{{ querytype }}">{{ querytype }}</option>
+		{% for option,option_name in options.items() %}
+			<option value="{{ option }}">{{ option_name }}</option>
+		{% endfor %}
+		</select>
+		<div class=radio_div>
+			<input	type="checkbox"
+					class="table_radio"
+					name="table_citation"
+					id="citation"
+					value="citation"
+					{% if "citation" in table_list %}checked="checked"{% endif %}>
+					Direct Citation
+			</input><br>
+			<input	type="checkbox"
+					class="table_radio"
+					name="table_datapoint"
+					id="datapoint"
+					value="datapoint"
+					{% if "datapoint" in table_list %}checked="checked"{% endif %}>
+					Indirect Citation
+			</input><br>
+			<input	type="checkbox"
+					class="table_radio"
+					name="table_source"
+					id="source"
+					value="source"
+					{% if "source" in table_list %}checked="checked"{% endif %}>
+					Source
+			</input><br>
+			</div>
+		<button type="submit">Search</button>
+	</form>
+{% endmacro %}
+
+<!-- Choose result type macro -->
+{% macro result_block(result) %}
+	{% if result["type"] == "quote"  %}
+		{{ citation_block(result) }}
+	{% elif result["type"] == "datapoint" %}
+		{{ datapoint_block(result) }}
+	{% else %}
+		{{ source_block(result) }}
+	{% endif %}
+{% endmacro %}
+
+<!-- Citation result -->
+{% macro citation_block(result) %}
+	<div class=container4>
+	<p>{{ result["info"] }}</p>
+	<h1>
+	,,
+	{% for line in result["content"] %}
+		{{ line }}
+		{% if line == result["content"][-1]  %}
+			''
+		{% else %}
+			<br>
+		{% endif %}
+	{% endfor %}
+	</h1>
+	<p>- {{ result["author"] }}</p>
+	<p>{{ result["title"] }}<br><small>{{ result["subtitle"] }}</small></p>
+	<p>{{ result["origdate"] }} ({{ result["publisher"] }}, {{ result["year"] }})</p>
+	<p>Kapitel / Seite: {{ result["page"] }}</p>
+	<hr>
+	</div>
+{% endmacro %}
+
+<!-- Datapoint result -->
+{% macro datapoint_block(result) %}
+	<div class=container4>
+	<p>{{ result["info"] }}</p>
+	<h1>
+	{% for line in result["content"] %}
+		{{ line }}
+		{% if line != result["content"][-1]  %}
+			<br>
+		{% endif %}
+	{% endfor %}
+	</h1>
+	<p>- {{ result["author"] }}</p>
+	<p><strong>{{ result["title"] }}</strong><br><small>{{ result["subtitle"] }}</small></p>
+	<p>{{ result["origdate"] }} ({{ result["publisher"] }}, {{ result["year"] }})</p>
+	<p>Kapitel / Seite: {{ result["page"] }}</p>
+	<hr>
+	</div>
+{% endmacro %}
+
+<!-- Source result -->
+{% macro source_block(result) %}
+	<div class=container4>
+	<p>{{ result["type"] }}</p>
+	<h1>{{ result["title"] }}</h1>
+	<p>{{ result["subtitle"] }}</p>
+	<p>{{ result["author"] }}, {{ result["origdate"] }}
+	<br>({{ result["publisher"] }}, {{ result["year"] }})</p>
+	<hr>
+	</div>
+{% endmacro %}
+

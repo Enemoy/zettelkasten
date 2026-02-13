@@ -1,0 +1,122 @@
+:root {
+	color-scheme: light dark; /* both supported */
+}
+
+body {
+	/* background-color: lightblue; */
+	/* background-color: #e0e0e0; */
+	font-family: 'Courier New', Courier, monospace;
+	align-items: center;
+	width: 60%;
+	left: 25%;
+}
+
+div {
+	/* min - width: 200px; */
+	/* max - width: 800px; */
+	/* width: 50%; */
+	/* display: flex; */
+	/* align-items: center; */
+	margin-left: 10%;
+	margin-right: 10%;
+	/* max-width: 50%; */
+	/* min-width: 40%; */
+	position: relative;
+}
+
+.radio_div {
+	/* min - width: 200px; */
+	/* max - width: 800px; */
+	/* width: 50%; */
+	/* display: flex; */
+	/* align-items: center; */
+	/* margin-left: auto; */
+	/* margin-right: auto; */
+	/* max-width: 50%; */
+	min-width: 600px;
+	/* position: left; */
+	text-align: left;
+	align-content: left;
+	position: relative;
+}
+
+/* div.container5 { */
+/* 	height: 10em; */
+/* 	display: flex; */
+/* 	align-items: center; */
+/* 	left: 50%; */
+/* 	margin-right: -50%; */
+/* } */
+/* div.container5 p { */
+/* 	margin: 0 */
+/* } */
+
+
+
+/* .center { */
+/* 	display: flex; */
+/* 	border: 25%; */
+/* 	justify-content: center; */
+/* } */
+
+h1 {
+	/* color: navy; */
+	margin-left: 20px;
+	text-align: center;
+}
+
+p {
+	/* color: navy; */
+	margin-left: 20px;
+	text-align: center;
+}
+
+p.result_content {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  font-size: large;
+}
+
+form {
+	width: 500px;
+	margin: 0 auto;
+	text-align: center;
+	/* background-color: #eee; */
+	padding: 20px;
+	border-radius: 5px;
+}
+input[type="text"] {
+	width: 70%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+}
+input[type="radio"] {
+	width: 70%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	text-align: left;
+}
+button[type="submit"] {
+	width: 20%;
+	background-color: #4CAF50;
+	color: white;
+	padding: 14px 20px;
+	margin: 8px 0;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+button[type="submit"]:hover {
+	background-color: #45a049;
+}
+
