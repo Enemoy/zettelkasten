@@ -1,0 +1,1 @@
+echo "Deleting entry, careful!"; read -p "Please enter the cid / sid: " id; read -p "Please enter the table: " table_id; if [[ $table == 1 ]]; then table="sources_collection"; sid_or_cid="sid"; else table="points_collection"; sid_or_cid="cid"; fi; sqlite3 ~/Sync/Dokumente/PDFs/Uni/Zettelkasten/bib_sources.db "DELETE FROM $table WHERE $sid_or_cid = $id;"
