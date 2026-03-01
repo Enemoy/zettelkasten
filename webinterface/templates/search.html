@@ -3,12 +3,15 @@
 	citation_block,
 	datapoint_block,
 	source_block,
-	search_bar
+	search_form,
+	query_table,
+	script_new_search_bar
 %}
 <!DOCTYPE html>
 <!-- This is the main template for the site where the search results are displayed. -->
 <!-- It has the search bar filled out with the current query and the placeholders for the results. -->
 <html>
+{{ script_new_search_bar(query) }}
 <head>
 <!-- <link rel="stylesheet" href="style.css"> -->
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -17,14 +20,15 @@
 
 <h1>zk Webinterface</h1>
 <h1>Search</h1>
-{{ search_bar(query, querytype, options, table_list) }}
+{{ search_form(query, options, table_list) }}
 <hr>
-<ul>
-	<p>Searching for: "{{ query }}" in {{ querytype }}</p>
-	<hr>
-	{% for result in return_list %}
-		{{ result_block(result) }}
-	 {% endfor %}
-</ul>
+<p>
+	Searching for:
+	{{ query_table(query) }}
+</p>
+<hr>
+{% for result in return_list %}
+	{{ result_block(result) }}
+{% endfor %}
 </body>
 </html>

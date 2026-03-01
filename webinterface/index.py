@@ -12,7 +12,7 @@ import main.zettelkasten_functions as zfn
 
 
 app = Flask(__name__)
-@app.route("/")
+@app.route("/", methods=['GET'])
 def index():
     # Index Page with no search term input yet
     options_list = list(set(zfn.get_column_names(cfg.points_tablename) + zfn.get_column_names(cfg.database_bib_sources_tablename)))
@@ -23,39 +23,26 @@ def index():
     options = dict(sorted(options.items()))
     return_list = []
 
+    return render_template('index.html', query={"Author": "Enter search term!"},  options=options, return_list=return_list, table_list=["citation"])
 
-    return render_template('index.html', query="Enter search term!", querytype="Author", options=options, return_list=return_list, table_list=["quote"])
-
-@app.route("/search", methods=['POST'])
+@app.route("/search", methods=['POST', 'GET'])
 def search():
-    query = "83"
-    querytype = "cid"
+    # Get form values
+    query = request.form.getlist('query')
+    querytype = request.form.getlist('querytype')
 
-    query = request.form['query']
-    querytype = request.form['querytype']
-
-    table_list = []
-
-    try:
-        table_source = request.form['table_source']
-        table_list.append("source")
-    except:
-        table_source = False
-
-    try:
-        table_datapoint = request.form['table_datapoint']
-        table_list.append("datapoint")
-    except:
-        table_datapoint = False
-
-    try:
-        table_citation = request.form['table_citation']
+    table_list = request.form.getlist('checkbox_table')
+    if len(table_list) == 0:
         table_list.append("citation")
-    except:
-        table_citation = False
 
-    # table=3
-    query_dict = {querytype: query}
+    query_dict = {}
+
+    for q, t in zip(query, querytype):
+        if q != "":
+            query_dict[t] = q
+
+    print(query_dict)
+
     return_list = []
 
     options_list = list(set(zfn.get_column_names(cfg.points_tablename) + zfn.get_column_names(cfg.database_bib_sources_tablename)))
@@ -67,25 +54,27 @@ def search():
 
     return_list = []
     if query:
-        if table_source:
-            return_list += zfn.db_select_query(1, query_dict)
+        for t in table_list:
 
-        if table_datapoint:
-            tmp_list = zfn.db_select_query(2, query_dict)
-            for dic in tmp_list:
-                dic["content"] = dic["content"].split("\n")
-                return_list.append(dic)
+            # Use cid or sid if ID is selected, not the sql index.
+            # This is more useful for the end user.
+            tmp_query_dict = query_dict
+            if "id" in tmp_query_dict:
+                id_transformed = query_dict.pop("id")
+                if t == "citation" or "datapoint":
+                    tmp_query_dict["cid"] = id_transformed
+                else:
+                    tmp_query_dict["sid"] = id_transformed
 
-        if table_citation:
-            tmp_list = zfn.db_select_query(3, query_dict)
+            tmp_list = zfn.db_select_query(t, tmp_query_dict)
             for dic in tmp_list:
-                dic["content"] = dic["content"].split("\n")
+                # if "content" in dic:
+                #     dic["content"] = dic["content"].split("\n")
                 return_list.append(dic)
 
     # Create site with search results
     site = render_template('search.html',
-                           query=query,
-                           querytype=querytype.title(),
+                           query=query_dict,
                            options=options,
                            return_list=return_list,
                            table_list=table_list)

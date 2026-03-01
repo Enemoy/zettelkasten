@@ -1,7 +1,6 @@
 {% from 'macros.html' import
-	search_bar
+	search_form
 %}
-<!DOCTYPE html>
 <!DOCTYPE html>
 <!-- This is the root page where nothing has been queried yet. -->
 <html>
@@ -13,6 +12,6 @@
 
 <h1>zk Webinterface</h1>
 <h1>Search</h1>
-{{ search_bar(query, querytype, options, table_list) }}
+{{ search_form(query, options, table_list) }}
 </body>
 </html>

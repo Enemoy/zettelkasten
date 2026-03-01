@@ -1,17 +1,19 @@
-<!-- Searchbar with options -->
-{% macro search_bar(query, querytype, options, table_list) %}
+<!-- Construct search form -->
+{% macro search_form(query, options, table_list) %}
 	<form action="/search" method="POST">
-		<input type="text" name="query" placeholder="{{ query }}" {% if query != "Enter search term!" %} value="{{ query }}"{% endif %}>
-		<select name="querytype" id="querytype">
-		<option value="{{ querytype }}">{{ querytype }}</option>
-		{% for option,option_name in options.items() %}
-			<option value="{{ option }}">{{ option_name }}</option>
-		{% endfor %}
-		</select>
+		<!-- <div class=search_term_input> -->
+		<div id="search_inputs">
+			{% for column,term in query.items() %}
+				{{ search_term_input(term,column,options) }}
+			{% endfor %}
+		</div>
+		<div class="form-text">
+			<a href="#" onclick="javascript:return addSearchInput()">Add another</a>
+		</div>
 		<div class=radio_div>
 			<input	type="checkbox"
 					class="table_radio"
-					name="table_citation"
+					name="checkbox_table"
 					id="citation"
 					value="citation"
 					{% if "citation" in table_list %}checked="checked"{% endif %}>
@@ -19,7 +21,7 @@
 			</input><br>
 			<input	type="checkbox"
 					class="table_radio"
-					name="table_datapoint"
+					name="checkbox_table"
 					id="datapoint"
 					value="datapoint"
 					{% if "datapoint" in table_list %}checked="checked"{% endif %}>
@@ -27,7 +29,7 @@
 			</input><br>
 			<input	type="checkbox"
 					class="table_radio"
-					name="table_source"
+					name="checkbox_table"
 					id="source"
 					value="source"
 					{% if "source" in table_list %}checked="checked"{% endif %}>
@@ -36,6 +38,46 @@
 			</div>
 		<button type="submit">Search</button>
 	</form>
+{% endmacro %}
+
+<!-- Single Search bar input plus column options -->
+{% macro search_term_input(term,column,options) %}
+	{% if term != "" %}
+		<div class="search_input">
+			<input	type="text"
+					name="query"
+					placeholder="Enter search term!"
+					{% if term != "Enter search term!" %}
+						value="{{ term }}"
+					{% endif %}>
+			<select name="querytype" id="querytype">
+				<option value="{{ column }}">{{ column }}</option>
+				{% for option,option_name in options.items() %}
+					<option value="{{ option }}">
+						{{ option_name }}
+					</option>
+				{% endfor %}
+			</select>
+		</div>
+	{% endif %}
+{% endmacro %}
+
+<!-- Render table displaying search terms -->
+{% macro query_table(query) %}
+	<table>
+		<tr>
+			<th><em>Term</em></th>
+			<th>&ensp; in &ensp;<th>
+			<th><em>Column</em></th>
+		</tr>
+		{% for column,term in query.items() %}
+			<tr>
+				<th><em>{{ term }}</em></th>
+				<th>&ensp; in &ensp;<th>
+				<th><em>{{ column }}</em></th>
+			</tr>
+		{% endfor %}
+	</table>
 {% endmacro %}
 
 <!-- Choose result type macro -->
@@ -51,19 +93,9 @@
 
 <!-- Citation result -->
 {% macro citation_block(result) %}
-	<div class=container4>
+	<div class="container4">
 	<p>{{ result["info"] }}</p>
-	<h1>
-	,,
-	{% for line in result["content"] %}
-		{{ line }}
-		{% if line == result["content"][-1]  %}
-			''
-		{% else %}
-			<br>
-		{% endif %}
-	{% endfor %}
-	</h1>
+	{{ content_rendering(result["content"], result["cid"], result["type"]) }}
 	<p>- {{ result["author"] }}</p>
 	<p>{{ result["title"] }}<br><small>{{ result["subtitle"] }}</small></p>
 	<p>{{ result["origdate"] }} ({{ result["publisher"] }}, {{ result["year"] }})</p>
@@ -75,20 +107,13 @@
 <!-- Datapoint result -->
 {% macro datapoint_block(result) %}
 	<div class=container4>
-	<p>{{ result["info"] }}</p>
-	<h1>
-	{% for line in result["content"] %}
-		{{ line }}
-		{% if line != result["content"][-1]  %}
-			<br>
-		{% endif %}
-	{% endfor %}
-	</h1>
-	<p>- {{ result["author"] }}</p>
-	<p><strong>{{ result["title"] }}</strong><br><small>{{ result["subtitle"] }}</small></p>
-	<p>{{ result["origdate"] }} ({{ result["publisher"] }}, {{ result["year"] }})</p>
-	<p>Kapitel / Seite: {{ result["page"] }}</p>
-	<hr>
+		<p>{{ result["info"] }}</p>
+		{{ content_rendering(result["content"], result["cid"], result["type"]) }}
+		<p>- {{ result["author"] }}</p>
+		<p><strong>{{ result["title"] }}</strong><br><small>{{ result["subtitle"] }}</small></p>
+		<p>{{ result["origdate"] }} ({{ result["publisher"] }}, {{ result["year"] }})</p>
+		<p>Kapitel / Seite: {{ result["page"] }}</p>
+		<hr>
 	</div>
 {% endmacro %}
 
@@ -98,9 +123,121 @@
 	<p>{{ result["type"] }}</p>
 	<h1>{{ result["title"] }}</h1>
 	<p>{{ result["subtitle"] }}</p>
-	<p>{{ result["author"] }}, {{ result["origdate"] }}
-	<br>({{ result["publisher"] }}, {{ result["year"] }})</p>
+	<p>
+		{% if result["origdate"]  %}
+			{{ result["author"] }}, {{ result["origdate"] }}
+		{% else %}
+			{{ result["author"] }}
+		{% endif %}
+		<br>({{ result["publisher"] }}, {{ result["year"] }})
+	</p>
 	<hr>
 	</div>
 {% endmacro %}
 
+
+<!-- Content rendering -->
+<!-- Contains read more / less button -->
+{% macro content_rendering(content, cid, type) %}
+	<div>
+		<div class="result_content">
+			<p class="result_content">
+				<span id="less">
+				{%- if type == "quote" -%}
+					,,
+				{%- endif -%}
+				{% set limit_length = 250 %}
+				{% set limit_break = 240 %}
+				{% set span_whitespace = namespace(bool=False) %}
+				{%- if content|length > limit_length -%}
+					{% set extend_bool = '1' %}
+				{% else %}
+					{% set extend_bool = '0' %}
+				{%- endif -%}
+
+				{% for char in content -%}
+
+					{%- if loop.index == limit_break  -%}
+						{%- if extend_bool  -%}
+							{% set span_whitespace.bool = True %}
+						{%- endif -%}
+					{%- endif -%}
+
+					{%- if span_whitespace.bool == True -%}
+						{%- if char == ' ' -%}
+							</span>
+							<span id="dots_{{ cid }}">
+								...
+								{%- if type == "quote" -%}
+									''
+								{%- endif -%}
+							</span>
+							<span id="more_{{ cid }}">
+							{% set span_whitespace.bool = False %}
+						{%- endif -%}
+					{%- endif -%}
+
+					{%- if char == '\n' -%}
+						<br>
+					{%- else -%}
+						{{ char }}
+					{%- endif -%}
+
+				{%- endfor -%}
+
+				{%- if type == "quote" -%}
+					''
+				{%- endif -%}
+				</span>
+			</p>
+			{%- if extend_bool == '1'  -%}
+				<p class="readmore_link">
+				<button type="expand_text" onclick="readMoreFunction({{ cid }})" id="readmore_link_{{ cid }}">Read more</button>
+					<!-- <a href="#" onclick="readMoreFunction({{ cid }})" id="readmore_link">Read more</a> -->
+				</p>
+				{{ script_expand_text() }}
+			{%- endif -%}
+			</div>
+		</div>
+
+{% endmacro %}
+
+<!-- Javascript Functions -->
+
+{% macro script_expand_text(cid) %}
+	<script>
+		function readMoreFunction(cid) {
+		var dots = document.getElementById("dots_".concat(cid));
+		var moreText = document.getElementById("more_".concat(cid));
+		var ElementIdPre =  "readmore_link_";
+		var ElementId = ElementIdPre.concat(cid);
+		console.log(ElementId);
+		var btnText = document.getElementById(ElementId);
+
+		if (dots.style.display === "none") {
+			dots.style.display = "inline";
+			btnText.innerHTML = "Read more";
+			moreText.style.display = "none";
+		} else {
+			dots.style.display = "none";
+			btnText.innerHTML = "Read less";
+			moreText.style.display = "inline";
+		}
+	}
+	</script>
+{% endmacro %}
+
+{% macro script_new_search_bar(query) %}
+	<script>
+		function addSearchInput() {
+			const firstTextInput = document.querySelector('.search_input');
+			const newTextInput = document.createElement('div');
+			newTextInput.classList.add('search_input');
+			newTextInput.innerHTML = firstTextInput.innerHTML;
+			document.getElementById('search_inputs').appendChild(newTextInput);
+			document.querySelector('.search_input:last-child input').focus();
+			document.querySelector('.search_input:last-child input').value = "";
+			return false;
+		}
+	</script>
+{% endmacro %}

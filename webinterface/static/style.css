@@ -9,6 +9,13 @@ body {
 	align-items: center;
 	width: 60%;
 	left: 25%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+table {
+	margin-left: auto;
+	margin-right: auto;
 }
 
 div {
@@ -17,8 +24,8 @@ div {
 	/* width: 50%; */
 	/* display: flex; */
 	/* align-items: center; */
-	margin-left: 10%;
-	margin-right: 10%;
+	/* margin-left: 10%; */
+	/* margin-right: 10%; */
 	/* max-width: 50%; */
 	/* min-width: 40%; */
 	position: relative;
@@ -71,14 +78,38 @@ p {
 	text-align: center;
 }
 
-p.result_content {
+div.result_content {
+  display: block;
+  /* margin-top: 1em; */
+  /* margin-bottom: 1em; */
+  /* margin-left: 0; */
+  /* margin-right: 0; */
+  /* font-weight: bold; */
+  /* font-size: large; */
+  font-weight: bold;
+  font-size: xx-large;
+}
+p.readmore_link {
+	/* color: navy; */
+	margin-left: 20px;
+	text-align: center;
+	font-size: small;
+}
+
+/* #sections div[id^='s'] { */
+/*   color: red; */
+/* } */
+span[id^='more_'] {display: none;}
+
+span.result_content {
   display: block;
   margin-top: 1em;
   margin-bottom: 1em;
   margin-left: 0;
   margin-right: 0;
-  font-weight: bold;
-  font-size: large;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 form {
@@ -105,6 +136,22 @@ input[type="radio"] {
 	border: 2px solid #ccc;
 	border-radius: 4px;
 	text-align: left;
+}
+button[type="expand_text"] {
+	width: 12%;
+	/* background-color: #4CAF50; */
+	background-color: navy;
+	color: white;
+	padding: 2px 2px;
+	margin: 2px 2px;
+	border: 1px;
+	border-radius: 4px;
+	cursor: pointer;
+	align-items: center;
+	left: 25%;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: small;
 }
 button[type="submit"] {
 	width: 20%;
